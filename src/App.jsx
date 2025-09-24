@@ -1,9 +1,8 @@
-function App() {
+import HomePage from './pages/HomePage'
 
+function App() {
   return (
-    <>
-    hekki
-    </>
+    <HomePage />
   )
 }
 
