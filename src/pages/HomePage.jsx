@@ -1,11 +1,11 @@
 import MainLayout from '../components/templates/MainLayout'
-import Board from '../components/organisms/Board'
 
 function HomePage() {
   return (
-    <MainLayout>
-      <Board />
-    </MainLayout>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h1 className="text-2xl font-bold">Home</h1>
+    </div>
+
   )
 }
 

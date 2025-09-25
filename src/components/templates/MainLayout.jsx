@@ -1,11 +1,9 @@
-import Text from '../atoms/Text'
+import Header from '../organisms/Header'
 
 function MainLayout({ children }) {
   return (
-    <div style={{ maxWidth: 960, margin: '0 auto', padding: 24 }}>
-      <header style={{ marginBottom: 24 }}>
-        <Text as="h1">Trello Web</Text>
-      </header>
+    <div className="w-full h-full">
+      <Header />
       <main>
         {children}
       </main>
