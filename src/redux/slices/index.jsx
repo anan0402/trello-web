@@ -1,0 +1,2 @@
+
+export { default as headerReducer } from './headerSlice'
