@@ -1,31 +1,114 @@
 import { Columns, MoonIcon, SunIcon } from "lucide-react"
-import React from "react"
+import React, { useCallback, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
 import { changeThemeMode } from "../../redux/slices/headerSlice"
 import { getThemeIcon, toggleTheme } from "../../theme"
+import Avatar from "../atoms/Avatar"
 import Button from "../atoms/Button"
-import Text from "../atoms/Text"
+import AccountMenu from "../menus/AccountMenu"
+import Popup from "../molecules/Popup"
+import SearchBar from "../molecules/SearchBar"
+import HeaderCreatedButtonMenu from "../menus/HeaderCreatedButtonMenu"
 
 function Header() {
   const dispatch = useDispatch()
   const theme = useSelector((state) => state.headerReducer.themeMode)
-  const handleToggleTheme = () => {
+  const navigate = useNavigate()
+
+  const [isAccountPopupOpen, setIsAccountPopupOpen] = useState(false)
+  const [isCreatedButtonPopupOpen, setIsCreatedButtonPopupOpen] = useState(false)
+  const avatarRef = useRef(null)
+  const createdButtonRef = useRef(null)
+
+  // Mock user data - replace with real user data from your auth system
+  const user = {
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    avatar: '' // Add image URL here
+  }
+
+  const handleNavigate = useCallback(() => {
+    navigate('/')
+  }, [navigate])
+
+  const handleToggleTheme = useCallback(() => {
     toggleTheme()
     const currentTheme = getThemeIcon()
     dispatch(changeThemeMode(currentTheme))
-  }
+  }, [])
+
+  const handleCloseAccountPopup = useCallback(() => {
+    setIsAccountPopupOpen(false)
+  }, [])
+
+  const handleAvatarClick = useCallback(() => {
+    setIsAccountPopupOpen(prev => !prev)
+  }, [])
+  
+  const handleSearch = useCallback((value) => {
+    console.log(value)
+  }, [])
+
+  const handleCreatedButtonClick = useCallback(() => {
+    setIsCreatedButtonPopupOpen(prev => !prev)
+  }, [])
+
+  const handleCloseCreatedButtonPopup = useCallback(() => {
+    setIsCreatedButtonPopupOpen(false)
+  }, [])
+
   return (
-    <header className="sticky top-0 z-10 flex items-center justify-between p-6 border-b">
-      <div className="flex items-end gap-3">
-        <Columns height={20} width={20} />
-        <Text as='p'>Trello Web</Text>
-      </div>
-      <Button
-        onClick={handleToggleTheme}
-        className="w-12 h-12 flex items-center justify-center"
+    <header className="h-25 sticky top-0 z-10 flex items-center justify-between px-6 py-5 border-b gap-4">
+      <div
+        className="flex items-center justify-center gap-4 cursor-pointer"
+        onClick={handleNavigate}
       >
-        {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
-      </Button>
+        <Columns height={20} width={20} />
+        <span className="text-[2rem] font-bold">Trello Web</span>
+      </div>
+      <div className="h-full flex items-center gap-4 relative">
+        <SearchBar onSearch={handleSearch} className="w-[40rem]" />
+        <Button onClick={handleCreatedButtonClick} ref={createdButtonRef}>Create</Button>
+        <Popup
+          isOpen={isCreatedButtonPopupOpen}
+          onClose={handleCloseCreatedButtonPopup}
+          position="bottom"
+          triggerRef={createdButtonRef}
+          className="right-0"
+        >
+          <HeaderCreatedButtonMenu />
+        </Popup>
+      </div>
+      <div className="flex items-center gap-4 h-full">
+        <Button
+          onClick={handleToggleTheme}
+          className="w-15 h-15 flex items-center justify-center p-2"
+        >
+          {theme === 'dark' ? <SunIcon size={16} /> : <MoonIcon size={16} />}
+        </Button>
+
+        <div ref={avatarRef} className="relative">
+          <Avatar
+            src={user.avatar}
+            alt={user.name}
+            size="lg"
+            onClick={handleAvatarClick}
+          />
+          <Popup
+            isOpen={isAccountPopupOpen}
+            onClose={handleCloseAccountPopup}
+            position="bottom"
+            triggerRef={avatarRef}
+            className="right-0"
+          >
+            <AccountMenu
+              user={user}
+              onClose={handleCloseAccountPopup}
+            />
+          </Popup>
+        </div>
+      </div>
     </header>
   )
 }

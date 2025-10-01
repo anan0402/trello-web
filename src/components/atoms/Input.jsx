@@ -1,3 +1,5 @@
+import React from "react"
+
 function Input({ value, onChange, placeholder = '', type = 'text', className = '' }) {
   return (
     <input
@@ -10,6 +12,6 @@ function Input({ value, onChange, placeholder = '', type = 'text', className = '
   )
 }
 
-export default Input
+export default React.memo(Input)
 
 

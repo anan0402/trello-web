@@ -1,3 +1,4 @@
+import React from 'react'
 import Header from '../organisms/Header'
 
 function MainLayout({ children }) {
@@ -11,6 +12,6 @@ function MainLayout({ children }) {
   )
 }
 
-export default MainLayout
+export default React.memo(MainLayout)
 
 

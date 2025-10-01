@@ -1,3 +1,5 @@
+import React from "react"
+
 function Card({ children, className = '' }) {
   return (
     <div className={"card " + className}>
@@ -6,6 +8,6 @@ function Card({ children, className = '' }) {
   )
 }
 
-export default Card
+export default React.memo(Card)
 
 

@@ -1,5 +1,6 @@
 import Card from '../molecules/Card'
 import Text from '../atoms/Text'
+import React from 'react'
 
 function Board() {
   return (
@@ -13,6 +14,6 @@ function Board() {
   )
 }
 
-export default Board
+export default React.memo(Board)
 
 

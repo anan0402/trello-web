@@ -1,3 +1,4 @@
+import React from 'react'
 import Text from '../atoms/Text'
 
 function BoardBar({ boardId }) {
@@ -9,6 +10,6 @@ function BoardBar({ boardId }) {
   )
 }
 
-export default BoardBar
+export default React.memo(BoardBar)
 
 

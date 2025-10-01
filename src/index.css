@@ -76,7 +76,7 @@ h1 {
 }
 
 p {
-  font-size: clamp(0.8rem, 1rem, 2rem);
+  font-size: clamp(0.8rem, 1.6rem, 2rem);
 }
 
 button {
@@ -84,6 +84,7 @@ button {
   border: 1px solid var(--button-border);
   padding: 0.4rem 0.8rem;
   font-size: 1.6rem;
+  height: 100%;
   font-weight: 500;
   font-family: inherit;
   background-color: transparent;
