@@ -1,4 +1,4 @@
-import { Columns, MoonIcon, SunIcon } from "lucide-react"
+import { BellIcon, Columns, MoonIcon, SunIcon } from "lucide-react"
 import React, { useCallback, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
@@ -7,6 +7,7 @@ import { getThemeIcon, toggleTheme } from "../../theme"
 import Avatar from "../atoms/Avatar"
 import Button from "../atoms/Button"
 import AccountMenu from "../menus/AccountMenu"
+import NotificationMenu from "../menus/NotificationMenu"
 import Popup from "../molecules/Popup"
 import SearchBar from "../molecules/SearchBar"
 import HeaderCreatedButtonMenu from "../menus/HeaderCreatedButtonMenu"
@@ -18,8 +19,10 @@ function Header() {
 
   const [isAccountPopupOpen, setIsAccountPopupOpen] = useState(false)
   const [isCreatedButtonPopupOpen, setIsCreatedButtonPopupOpen] = useState(false)
+  const [isNotificationPopupOpen, setIsNotificationPopupOpen] = useState(false)
   const avatarRef = useRef(null)
   const createdButtonRef = useRef(null)
+  const notificationRef = useRef(null)
 
   // Mock user data - replace with real user data from your auth system
   const user = {
@@ -45,7 +48,7 @@ function Header() {
   const handleAvatarClick = useCallback(() => {
     setIsAccountPopupOpen(prev => !prev)
   }, [])
-  
+
   const handleSearch = useCallback((value) => {
     console.log(value)
   }, [])
@@ -56,6 +59,14 @@ function Header() {
 
   const handleCloseCreatedButtonPopup = useCallback(() => {
     setIsCreatedButtonPopupOpen(false)
+  }, [])
+
+  const handleNotificationClick = useCallback(() => {
+    setIsNotificationPopupOpen(prev => !prev)
+  }, [])
+
+  const handleCloseNotificationPopup = useCallback(() => {
+    setIsNotificationPopupOpen(false)
   }, [])
 
   return (
@@ -80,13 +91,34 @@ function Header() {
           <HeaderCreatedButtonMenu />
         </Popup>
       </div>
-      <div className="flex items-center gap-4 h-full">
-        <Button
+      <div className="flex items-center gap-5 h-full">
+        <div
           onClick={handleToggleTheme}
-          className="w-15 h-15 flex items-center justify-center p-2"
+          className="cursor-pointer hover:bg-gray-200/70 focus:bg-gray-200/70 rounded-md p-2"
         >
-          {theme === 'dark' ? <SunIcon size={16} /> : <MoonIcon size={16} />}
-        </Button>
+          {theme === 'dark' ? <SunIcon size={20} /> : <MoonIcon size={20} />}
+        </div>
+
+        <div
+          ref={notificationRef}
+          onClick={handleNotificationClick}
+          className="cursor-pointer hover:bg-gray-200/70 focus:bg-gray-200/70 rounded-md p-2 relative"
+        >
+          <BellIcon size={20} className="color-gray-900" />
+          <Popup
+            isOpen={isNotificationPopupOpen}
+            onClose={handleCloseNotificationPopup}
+            position="bottom"
+            triggerRef={notificationRef}
+            className="right-0"
+          >
+            <NotificationMenu
+              onClose={handleCloseNotificationPopup}
+            />
+          </Popup>
+        </div>
+
+
 
         <div ref={avatarRef} className="relative">
           <Avatar

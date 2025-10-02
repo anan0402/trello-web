@@ -32,7 +32,7 @@ function AccountMenu({
 
 
   return (
-    <div className={`w-150 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden ${className}`}>
+    <div className={`min-w-[30rem] bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden ${className}`}>
       {/* User Info Section */}
       <div className="p-4 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-700 dark:to-gray-800 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center gap-3">
