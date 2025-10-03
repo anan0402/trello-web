@@ -94,7 +94,7 @@ function Header() {
       <div className="flex items-center gap-5 h-full">
         <div
           onClick={handleToggleTheme}
-          className="cursor-pointer hover:bg-gray-200/70 focus:bg-gray-200/70 rounded-md p-2"
+          
         >
           {theme === 'dark' ? <SunIcon size={20} /> : <MoonIcon size={20} />}
         </div>
@@ -117,8 +117,6 @@ function Header() {
             />
           </Popup>
         </div>
-
-
 
         <div ref={avatarRef} className="relative">
           <Avatar
