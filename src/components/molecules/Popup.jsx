@@ -20,6 +20,7 @@ function Popup({
         (!triggerRef?.current || !triggerRef.current.contains(e.target))
       ) {
         if (onClose) {
+          console.log('onClose')
           onClose()
         }
       }
@@ -33,6 +34,7 @@ function Popup({
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === 'Escape' && isOpen && onClose) {
+        console.log('onClose')
         onClose()
       }
     }
@@ -56,6 +58,8 @@ function Popup({
   return (
     <div
       ref={popupRef}
+      onClick={(e) => e.stopPropagation()}
+      onMouseDown={(e) => e.stopPropagation()}
       className={`absolute z-40 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 ${getPositionClasses()} ${className}`}
     >
       {children}

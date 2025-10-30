@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { Lock, Users, Building2, Globe, Check, X } from 'lucide-react'
 
 function VisibilityMenu({ onClose, onVisibilitySelect }) {
@@ -33,11 +33,15 @@ function VisibilityMenu({ onClose, onVisibilitySelect }) {
             selected: true
         }
     ]
+    const onCloseRef = useRef(onClose)
+    useEffect(() => {
+        onCloseRef.current = onClose
+    }, [onClose])
 
-    const handleVisibilityClick = (visibilityId) => {
+    const handleVisibilityClick = useCallback((visibilityId) => {
         onVisibilitySelect(visibilityId)
-        onClose()
-    }
+        onCloseRef.current()
+    }, [onVisibilitySelect])
 
     return (
         <div className="bg-white rounded-lg shadow-lg border border-gray-200 min-w-[30rem]">

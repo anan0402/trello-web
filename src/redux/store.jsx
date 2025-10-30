@@ -1,10 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { headerReducer } from './slices'
+import { headerReducer, authReducer } from './slices'
 
 
 const store = configureStore({
   reducer: {
     headerReducer,
+    authReducer,
   },
 })
 
