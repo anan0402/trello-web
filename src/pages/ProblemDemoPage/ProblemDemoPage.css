@@ -1,0 +1,32 @@
+.problem-demo-page {
+  display: flex;
+  justify-content: center;
+  padding: 48px 16px;
+}
+
+.problem-demo-page__card {
+  width: 100%;
+  max-width: 760px;
+  border-radius: 24px;
+  padding: 24px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(247, 249, 252, 0.98) 100%);
+}
+
+.problem-demo-page__alert {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 12px;
+  background-color: rgba(244, 67, 54, 0.08);
+  color: #b71c1c;
+}
+
+@media (min-width: 600px) {
+  .problem-demo-page {
+    padding: 56px 24px;
+  }
+
+  .problem-demo-page__card {
+    padding: 32px;
+  }
+}
