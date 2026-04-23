@@ -1,4 +1,4 @@
-import TrelloButton from '@/components/atoms/TrelloButton/TrelloButton'
+import CustomButton from '@/components/atoms/CustomButton/CustomButton'
 import Text from '@/components/atoms/Text/Text'
 
 /**
@@ -15,7 +15,7 @@ function EmptyState({ title, description, ctaLabel, onCtaClick }) {
       </Text>
       {ctaLabel ? (
         <div style={{ marginTop: 16 }}>
-          <TrelloButton onClick={onCtaClick}>{ctaLabel}</TrelloButton>
+          <CustomButton onClick={onCtaClick}>{ctaLabel}</CustomButton>
         </div>
       ) : null}
     </div>

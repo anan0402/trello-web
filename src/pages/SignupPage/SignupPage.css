@@ -1,4 +1,4 @@
-.login-page {
+.signup-page {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -10,7 +10,7 @@
     linear-gradient(135deg, var(--app-bg-color) 0%, #d0c8bc 56%, #c2b8a8 100%);
 }
 
-.login-card {
+.signup-card {
   width: 100%;
   max-width: 1080px;
   overflow: hidden;
@@ -22,15 +22,15 @@
   box-shadow: 0 24px 80px rgba(73, 67, 54, 0.18);
 }
 
-.login-card__hero {
+.signup-card__hero {
   padding: 32px;
   color: #f7f2e8;
   background: var(--app-hero-bg-color);
 }
 
-.login-card__eyebrow {
+.signup-card__eyebrow {
   display: inline-block;
-  border-radius: 24px;
+  letter-spacing: 2.4px;
   opacity: 0.9;
   font-weight: 700;
   font-family: 'Times New Roman', Times, serif;
@@ -38,7 +38,7 @@
   transform: rotate(-1.5deg) translateY(-1px);
 }
 
-.login-card__title {
+.signup-card__title {
   margin-top: 16px;
   margin-bottom: 16px;
   font-weight: 800;
@@ -48,14 +48,14 @@
   transform: rotate(-1deg);
 }
 
-.login-card__form-wrap {
+.signup-card__form-wrap {
   padding: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.login-card__form {
+.signup-card__form {
   width: 100%;
   max-width: 420px;
   display: flex;
@@ -64,20 +64,13 @@
   color: var(--app-primary-color);
 }
 
-.login-card__form-title {
+.signup-card__form-title {
   font-weight: 700;
   margin: 0;
   font-size: 30px;
 }
 
-.login-card__form-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.login-card__link {
+.signup-card__link {
   color: var(--app-primary-color);
   cursor: pointer;
   font-size: 16px;
@@ -85,11 +78,11 @@
   margin: 0;
 }
 
-.login-card__link:hover {
+.signup-card__link:hover {
   text-decoration: underline;
 }
 
-.login-card__footer {
+.signup-card__footer {
   margin-top: 32px;
   font-size: 16px;
   display: flex;
@@ -99,16 +92,16 @@
 }
 
 @media (min-width: 900px) {
-  .login-card {
+  .signup-card {
     grid-template-columns: 1.05fr 0.95fr;
   }
 
-  .login-card__hero,
-  .login-card__form-wrap {
+  .signup-card__hero,
+  .signup-card__form-wrap {
     padding: 56px;
   }
 
-  .login-card__title {
+  .signup-card__title {
     font-size: 3rem;
   }
 }

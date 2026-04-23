@@ -6,66 +6,73 @@ import Stack from '@mui/material/Stack'
 
 import InfinitySelectBox from '../../components/atoms/InfinitySelectBox/InfinitySelectBox'
 import DefaultLayout from '@/components/templates/DefaultLayout/DefaultLayout'
-import { fakeApi } from '@/services'
+// import { fakeApi } from '@/services'
 import './ProblemDemoPage.css'
 
 function ProblemDemoPage() {
-  const [selectedValue, setSelectedValue] = useState('')
-  const [entities, setEntities] = useState({})
-  const [childrenMap, setChildrenMap] = useState({})
-  const [rootIds, setRootIds] = useState([])
-  const [rootCursor, setRootCursor] = useState(0)
-  const [rootHasMore, setRootHasMore] = useState(true)
-  const [loadingRoot, setLoadingRoot] = useState(false)
-  const [loadingChildren, setLoadingChildren] = useState({})
-  const [childCursors, setChildCursors] = useState({})
-  const [childHasMore, setChildHasMore] = useState({})
+  const [state, setState] = useState(0)
+  // const [selectedValue, setSelectedValue] = useState('')
+  // const [entities, setEntities] = useState({})
+  // const [childrenMap, setChildrenMap] = useState({})
+  // const [rootIds, setRootIds] = useState([])
+  // const [rootCursor, setRootCursor] = useState(0)
+  // const [rootHasMore, setRootHasMore] = useState(true)
+  // const [loadingRoot, setLoadingRoot] = useState(false)
+  // const [loadingChildren, setLoadingChildren] = useState({})
+  // const [childCursors, setChildCursors] = useState({})
+  // const [childHasMore, setChildHasMore] = useState({})
 
-  const mapById = (items) =>
-    items.reduce((acc, item) => {
-      acc[item.id] = item
-      return acc
-    }, {})
+  // const mapById = (items) =>
+  //   items.reduce((acc, item) => {
+  //     acc[item.id] = item
+  //     return acc
+  //   }, {})
 
-  const loadRoot = async () => {
-    if (loadingRoot || !rootHasMore) return
+  // const loadRoot = async () => {
+  //   if (loadingRoot || !rootHasMore) return
 
-    setLoadingRoot(true)
-    const res = await fakeApi({ parentId: null, cursor: rootCursor, limit: 10 })
+  //   setLoadingRoot(true)
+  //   const res = await fakeApi({ parentId: null, cursor: rootCursor, limit: 10 })
 
-    setEntities((prev) => ({ ...prev, ...mapById(res.data) }))
-    setRootIds((prev) => [...prev, ...res.data.map((item) => item.id)])
-    setRootCursor(res.nextCursor)
-    setRootHasMore(res.hasMore)
-    setLoadingRoot(false)
-  }
+  //   setEntities((prev) => ({ ...prev, ...mapById(res.data) }))
+  //   setRootIds((prev) => [...prev, ...res.data.map((item) => item.id)])
+  //   setRootCursor(res.nextCursor)
+  //   setRootHasMore(res.hasMore)
+  //   setLoadingRoot(false)
+  // }
 
-  const loadChildren = async (parentId) => {
-    if (loadingChildren[parentId] || childHasMore[parentId] === false) return
+  // const loadChildren = async (parentId) => {
+  //   if (loadingChildren[parentId] || childHasMore[parentId] === false) return
 
-    setLoadingChildren((prev) => ({ ...prev, [parentId]: true }))
-    const cursor = childCursors[parentId] ?? 0
-    const res = await fakeApi({ parentId, cursor, limit: 10 })
+  //   setLoadingChildren((prev) => ({ ...prev, [parentId]: true }))
+  //   const cursor = childCursors[parentId] ?? 0
+  //   const res = await fakeApi({ parentId, cursor, limit: 10 })
 
-    setEntities((prev) => ({ ...prev, ...mapById(res.data) }))
-    setChildrenMap((prev) => ({
-      ...prev,
-      [parentId]: [...(prev[parentId] || []), ...res.data.map((item) => item.id)],
-    }))
-    setChildCursors((prev) => ({ ...prev, [parentId]: res.nextCursor }))
-    setChildHasMore((prev) => ({ ...prev, [parentId]: res.hasMore }))
-    setLoadingChildren((prev) => ({ ...prev, [parentId]: false }))
-  }
+  //   setEntities((prev) => ({ ...prev, ...mapById(res.data) }))
+  //   setChildrenMap((prev) => ({
+  //     ...prev,
+  //     [parentId]: [...(prev[parentId] || []), ...res.data.map((item) => item.id)],
+  //   }))
+  //   setChildCursors((prev) => ({ ...prev, [parentId]: res.nextCursor }))
+  //   setChildHasMore((prev) => ({ ...prev, [parentId]: res.hasMore }))
+  //   setLoadingChildren((prev) => ({ ...prev, [parentId]: false }))
+  // }
+
+  // useEffect(() => {
+  //   loadRoot()
+  // }, [])
 
   useEffect(() => {
-    loadRoot()
+    setTimeout(() => {
+      setState(1)
+    }, 5000)
   }, [])
 
-
+  console.log('hehe', state)
   return (
     <DefaultLayout>
       <Box className="problem-demo-page">
-        <Paper elevation={0} className="problem-demo-page__card">
+        {/* <Paper elevation={0} className="problem-demo-page__card">
           <Stack spacing={2}>
             <InfinitySelectBox
               value={selectedValue}
@@ -77,7 +84,8 @@ function ProblemDemoPage() {
               onLoadChildren={loadChildren}
             />
           </Stack>
-        </Paper>
+        </Paper> */}
+
       </Box>
     </DefaultLayout>
   )

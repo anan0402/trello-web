@@ -1,6 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
-import FormControlLabel from '@mui/material/FormControlLabel'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import Link from '@mui/material/Link'
@@ -12,64 +11,73 @@ import { useState } from 'react'
 import * as yup from 'yup'
 
 import CustomButton from '@/components/atoms/CustomButton/CustomButton'
-import CustomCheckBox from '@/components/atoms/CustomCheckBox/CustomCheckBox'
-import './LoginPage.css'
+import './SignupPage.css'
 
 const validationMessages = {
+  nameRequired: 'Vui lòng nhập họ và tên',
   emailRequired: 'Vui lòng nhập email',
   emailInvalid: 'Email không hợp lệ',
   passwordRequired: 'Vui lòng nhập mật khẩu',
   passwordMin: 'Mật khẩu tối thiểu 6 ký tự'
 }
 
-const loginSchema = yup.object({
+const signupSchema = yup.object({
+  name: yup.string().required(validationMessages.nameRequired),
   email: yup.string().required(validationMessages.emailRequired).email(validationMessages.emailInvalid),
   password: yup
     .string()
     .required(validationMessages.passwordRequired)
-    .min(6, validationMessages.passwordMin),
-  rememberMe: yup.boolean().default(true)
+    .min(6, validationMessages.passwordMin)
 })
 
-function LoginPage() {
+function SignupPage() {
   const [showPassword, setShowPassword] = useState(false)
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting }
   } = useForm({
-    resolver: yupResolver(loginSchema),
+    resolver: yupResolver(signupSchema),
     defaultValues: {
+      name: '',
       email: '',
-      password: '',
-      rememberMe: true
+      password: ''
     }
   })
 
   const onSubmit = (formValues) => {
-    console.log('Login submit:', formValues)
+    console.log('Signup submit:', formValues)
   }
 
   return (
-    <div className="login-page">
-      <div className="login-card">
-        <div className="login-card__hero">
-          <p className="login-card__eyebrow">
-            MỖI NGÀY
+    <div className="signup-page">
+      <div className="signup-card">
+        <div className="signup-card__hero">
+          <p className="signup-card__eyebrow">
+            THAM GIA NGAY
           </p>
-          <p className="login-card__title">
-            Chào mừng bạn quay lại.
+          <p className="signup-card__title">
+            Tạo tài khoản mới.
           </p>
         </div>
 
-        <div className="login-card__form-wrap">
-          <div className="login-card__form">
-            <p className="login-card__form-title">Đăng nhập</p>
+        <div className="signup-card__form-wrap">
+          <div className="signup-card__form">
+            <p className="signup-card__form-title">Đăng ký</p>
+
             <form
               onSubmit={handleSubmit(onSubmit)}
               noValidate
               style={{ display: 'flex', flexDirection: 'column', gap: 20 }}
             >
+              <TextField
+                fullWidth
+                label="Họ và tên"
+                placeholder="Nhập họ và tên"
+                error={Boolean(errors.name)}
+                helperText={errors.name?.message}
+                {...register('name')}
+              />
               <TextField
                 fullWidth
                 label="Email"
@@ -107,18 +115,6 @@ function LoginPage() {
                 {...register('password')}
               />
 
-              <div className="login-card__form-row">
-                <FormControlLabel
-                  control={<CustomCheckBox size="small" {...register('rememberMe')} />}
-                  label="Ghi nhớ tôi"
-                />
-                <Link component={RouterLink} to="/signup" underline="none" alignItems='center'>
-                  <p className="login-card__link">
-                    Quên mật khẩu?
-                  </p>
-                </Link>
-              </div>
-
               <CustomButton
                 size="large"
                 fullWidth
@@ -126,22 +122,18 @@ function LoginPage() {
                 type="submit"
                 disabled={isSubmitting}
               >
-                Đăng nhập
+                Đăng ký
               </CustomButton>
 
-              <CustomButton
-                variable="outline"
-                size="large"
-                fullWidth
-              >
-                Đăng nhập với Google
+              <CustomButton variable="outline" size="large" fullWidth>
+                Đăng ký bằng Google
               </CustomButton>
             </form>
 
-            <p className="login-card__footer">
-              Chưa có tài khoản?{' '}
-              <Link component={RouterLink} to="/signup" underline="none" alignItems='center'>
-                <span className="login-card__link">Tạo tài khoản</span>
+            <p className="signup-card__footer">
+              Đã có tài khoản?{' '}
+              <Link component={RouterLink} to="/login" underline="none" alignItems="center">
+                <span className="signup-card__link">Đăng nhập ngay</span>
               </Link>
             </p>
           </div>
@@ -151,4 +143,4 @@ function LoginPage() {
   )
 }
 
-export default LoginPage
+export default SignupPage
