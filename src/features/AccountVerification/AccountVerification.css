@@ -1,0 +1,77 @@
+.account-verification-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  background:
+    radial-gradient(circle at top left, var(--app-bg-color-light), transparent 26%),
+    radial-gradient(circle at bottom right, rgba(194, 210, 164, 0.48), transparent 30%),
+    linear-gradient(135deg, var(--app-bg-color) 0%, #d0c8bc 56%, #c2b8a8 100%);
+}
+
+.account-verification-card {
+  width: 100%;
+  max-width: 600px;
+  overflow: hidden;
+  border-radius: 24px;
+  border: 1px solid var(--app-border-color);
+  background-color: var(--app-surface-color);
+  box-shadow: 0 24px 80px rgba(73, 67, 54, 0.18);
+}
+
+.account-verification-card__content {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  color: var(--app-primary-color);
+}
+
+.account-verification-card__text {
+  margin: 0;
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+.account-verification-card__text--success {
+  color: #3d5c2e;
+  font-weight: 600;
+}
+
+.account-verification-card__text--error {
+  color: #8b3a3a;
+  font-weight: 600;
+}
+
+.account-verification-card__footer {
+  margin-top: 12px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.account-verification-card__link {
+  color: var(--app-primary-color);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.account-verification-card__link:hover {
+  text-decoration: underline;
+}
+
+@media (min-width: 900px) {
+  .account-verification-card {
+    grid-template-columns: 1.05fr 0.95fr;
+  }
+
+  .account-verification-card__hero,
+  .account-verification-card__content {
+    padding: 56px;
+  }
+
+  .account-verification-card__title {
+    font-size: 3rem;
+  }
+}

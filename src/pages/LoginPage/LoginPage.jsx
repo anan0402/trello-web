@@ -1,14 +1,15 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import Alert from '@mui/material/Alert'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import Link from '@mui/material/Link'
 import TextField from '@mui/material/TextField'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Link as RouterLink } from 'react-router'
+import { useEffect, useState } from 'react'
+import { Link as RouterLink, useSearchParams } from 'react-router'
 import { useForm } from 'react-hook-form'
-import { useState } from 'react'
 import * as yup from 'yup'
 
 import CustomButton from '@/components/atoms/CustomButton/CustomButton'
@@ -32,10 +33,14 @@ const loginSchema = yup.object({
 })
 
 function LoginPage() {
+  const [searchParams] = useSearchParams()
+  const registeredEmail = searchParams.get('registeredEmail')
+  const verifyEmail = searchParams.get('verifyEmail')
   const [showPassword, setShowPassword] = useState(false)
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting }
   } = useForm({
     resolver: yupResolver(loginSchema),
@@ -46,6 +51,13 @@ function LoginPage() {
     }
   })
 
+  useEffect(() => {
+    const emailFromParams = verifyEmail || registeredEmail
+    if (emailFromParams) {
+      setValue('email', emailFromParams)
+    }
+  }, [verifyEmail, registeredEmail, setValue])
+
   const onSubmit = (formValues) => {
     console.log('Login submit:', formValues)
   }
@@ -54,12 +66,23 @@ function LoginPage() {
     <div className="login-page">
       <div className="login-card">
         <div className="login-card__hero">
-          <p className="login-card__eyebrow">
-            MỖI NGÀY
-          </p>
           <p className="login-card__title">
             Chào mừng bạn quay lại.
           </p>
+          <div className="login-card__alert-wrap">
+          {verifyEmail && (
+            <Alert severity="success" className="login-card__alert">
+              Email <strong>{verifyEmail}</strong> đã được xác thực. Bạn có thể đăng nhập ngay.
+            </Alert>
+          )}
+
+          {!verifyEmail && registeredEmail && (
+            <Alert severity="warning" className="login-card__alert">
+              Cần xác thực email <strong>{registeredEmail}</strong>. Vui lòng kiểm tra hộp thư và
+              nhấn vào liên kết xác thực trước khi đăng nhập.
+            </Alert>
+          )}
+          </div>
         </div>
 
         <div className="login-card__form-wrap">

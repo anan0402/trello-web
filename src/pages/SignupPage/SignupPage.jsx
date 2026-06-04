@@ -5,12 +5,13 @@ import InputAdornment from '@mui/material/InputAdornment'
 import Link from '@mui/material/Link'
 import TextField from '@mui/material/TextField'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Link as RouterLink } from 'react-router'
+import { Link as RouterLink, useNavigate } from 'react-router'
 import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 import * as yup from 'yup'
 
 import CustomButton from '@/components/atoms/CustomButton/CustomButton'
+import { register as registerAccount } from '@/services/auth.service'
 import './SignupPage.css'
 
 const validationMessages = {
@@ -31,6 +32,7 @@ const signupSchema = yup.object({
 })
 
 function SignupPage() {
+  const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
   const {
     register,
@@ -45,8 +47,9 @@ function SignupPage() {
     }
   })
 
-  const onSubmit = (formValues) => {
-    console.log('Signup submit:', formValues)
+  const onSubmit = async (formValues) => {
+    await registerAccount(formValues)
+    navigate(`/login?registeredEmail=${encodeURIComponent(formValues.email)}`)
   }
 
   return (

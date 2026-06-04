@@ -25,7 +25,10 @@
 .login-card__hero {
   padding: 32px;
   color: #f7f2e8;
+  display: flex;
   background: var(--app-hero-bg-color);
+  flex-direction: column;
+  justify-content: space-around;
 }
 
 .login-card__eyebrow {
@@ -46,6 +49,11 @@
   line-height: 1.15;
   letter-spacing: -0.04em;
   transform: rotate(-1deg);
+}
+
+.login-card__alert {
+  margin-top: 8px;
+  border-radius: 12px;
 }
 
 .login-card__form-wrap {
@@ -97,7 +105,12 @@
   gap: 5px;
   text-align: center;
 }
-
+.login-card__alert-wrap{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
 @media (min-width: 900px) {
   .login-card {
     grid-template-columns: 1.05fr 0.95fr;
