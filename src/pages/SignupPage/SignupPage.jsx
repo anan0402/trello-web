@@ -12,7 +12,9 @@ import * as yup from 'yup'
 
 import CustomButton from '@/components/atoms/CustomButton/CustomButton'
 import { register as registerAccount } from '@/services/auth.service'
+import { getErrorMessage } from '@/utils/getErrorMessage'
 import './SignupPage.css'
+import { showErrorToast, showSuccessToast } from '../../components/atoms/CustomToast'
 
 const validationMessages = {
   nameRequired: 'Vui lòng nhập họ và tên',
@@ -48,17 +50,20 @@ function SignupPage() {
   })
 
   const onSubmit = async (formValues) => {
-    await registerAccount(formValues)
-    navigate(`/login?registeredEmail=${encodeURIComponent(formValues.email)}`)
+    try {
+      await registerAccount(formValues)
+      navigate(`/login?registeredEmail=${encodeURIComponent(formValues.email)}`)
+      showSuccessToast('Đăng ký tài khoản thành công.')
+    } catch (error) {
+      const errorMessage = getErrorMessage(error, 'Đăng ký thất bại!')
+      showErrorToast(errorMessage)
+    }
   }
 
   return (
     <div className="signup-page">
       <div className="signup-card">
         <div className="signup-card__hero">
-          <p className="signup-card__eyebrow">
-            THAM GIA NGAY
-          </p>
           <p className="signup-card__title">
             Tạo tài khoản mới.
           </p>

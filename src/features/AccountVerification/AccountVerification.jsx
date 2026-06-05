@@ -1,11 +1,13 @@
 import Link from '@mui/material/Link'
 import { useEffect, useState } from 'react'
-import { Navigate, Link as RouterLink, useParams } from 'react-router'
+import { Navigate, Link as RouterLink, useSearchParams } from 'react-router'
 
 import CustomButton from '@/components/atoms/CustomButton/CustomButton'
 import PageLoadingSpinner from '@/components/molecules/PageLoadingSpinner/PageLoadingSpinner'
 import { verifyAccount } from '@/services/auth.service'
+import { getErrorMessage } from '@/utils/getErrorMessage'
 import './AccountVerification.css'
+import { showErrorToast, showSuccessToast } from '../../components/atoms/CustomToast'
 
 function VerificationFooter() {
   return (
@@ -29,25 +31,31 @@ function VerificationCard({ children }) {
 }
 
 function AccountVerification() {
-  const { email, verificationToken } = useParams()
+  const [searchParams] = useSearchParams()
+  const email = searchParams.get('email')
+  const token = searchParams.get('token')
   const [status, setStatus] = useState(null)
 
   useEffect(() => {
-    if (email && verificationToken) {
+    if (email && token) {
       setStatus('loading')
-      verifyAccount({ email, verificationToken })
+      verifyAccount({ email, token })
         .then(() => {
           setStatus('success')
+          showSuccessToast('Xác thực thành công.')
         })
-        .catch(() => {
+        .catch((error) => {
+          const message = getErrorMessage(error, 'Xác thực thất bại.')
+          showErrorToast(message)
           setStatus('error')
         })
     }
-  }, [email, verificationToken])
+  }, [email, token])
 
-  if (!email || !verificationToken) {
-    return <Navigate to="*" />
+  if (!email || !token) {
+    return <Navigate to="/404" replace />
   }
+
 
   if (status === 'loading' || status === 'idle') {
     return (
@@ -68,7 +76,6 @@ function AccountVerification() {
           to="/signup"
           size="large"
           fullWidth
-          variable="outline"
         >
           Đăng ký lại
         </CustomButton>
@@ -77,7 +84,11 @@ function AccountVerification() {
     )
   }
 
-  return <Navigate to={`/login?verifyEmail=${email}`} />
+  if (status === 'success') {
+    return <Navigate to={`/login?verifyEmail=${encodeURIComponent(email)}`} replace />
+  }
+
+  return null
 }
 
 export default AccountVerification

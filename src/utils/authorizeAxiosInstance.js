@@ -17,9 +17,8 @@ authorizeAxiosInstance.interceptors.request.use((config) => {
 
 authorizeAxiosInstance.interceptors.response.use(
     (response) => response,
-    async (error) => {
-
-        return Promise.reject(error);
+    (error) => {
+        return Promise.reject(error.response || error);
     }
 );
 

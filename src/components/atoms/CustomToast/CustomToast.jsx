@@ -1,77 +1,55 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faCheck,
-  faExclamation,
-  faInfo,
-  faXmark
-} from '@fortawesome/free-solid-svg-icons'
-import IconButton from '@mui/material/IconButton'
-import Snackbar from '@mui/material/Snackbar'
-import { memo } from 'react'
+import { Box, Stack, Typography } from '@mui/material'
 
-import './CustomToast.css'
-
-const toastTitles = {
-  success: 'Success',
-  error: 'Error',
-  info: 'Info',
-  warning: 'Warning'
+const CONFIG = {
+  success: {
+    bgColor: '#F0FDF4',
+    borderColor: '#22C55E',
+    titleColor: '#166534'
+  },
+  error: {
+    bgColor: '#FEF2F2',
+    borderColor: '#EF4444',
+    titleColor: '#991B1B'
+  }
 }
 
-const toastIcons = {
-  success: faCheck,
-  error: faXmark,
-  info: faInfo,
-  warning: faExclamation
-}
-
-/**
- * Atom: toast notification (success | error | info | warning)
- */
-function CustomToast({
-  open,
+export default function CustomToast({
   title,
   message,
-  variant = 'info',
-  autoHideDuration = 3000,
-  onClose,
-  anchorOrigin = { vertical: 'top', horizontal: 'right' },
-  ...props
+  variant = 'success'
 }) {
-  const resolvedTitle = title ?? toastTitles[variant] ?? toastTitles.info
+  const config = CONFIG[variant]
 
   return (
-    <Snackbar
-      open={open}
-      autoHideDuration={autoHideDuration}
-      onClose={onClose}
-      anchorOrigin={anchorOrigin}
-      className="custom-toast-snackbar"
-      {...props}
+    <Box
+      sx={{
+        minWidth: 320,
+        p: 2,
+        borderRadius: 3,
+        bgcolor: config.bgColor,
+        borderLeft: `5px solid ${config.borderColor}`,
+        boxShadow: 3
+      }}
     >
-      <div className={`custom-toast custom-toast--${variant}`} role="alert">
-        <span className="custom-toast__accent" aria-hidden="true" />
+      <Stack direction="row" spacing={1.5}>
+        {config.icon}
 
-        <span className="custom-toast__icon" aria-hidden="true">
-          <FontAwesomeIcon icon={toastIcons[variant] ?? toastIcons.info} />
-        </span>
+        <Box>
+          <Typography
+            fontWeight={700}
+            color={config.titleColor}
+          >
+            {title}
+          </Typography>
 
-        <div className="custom-toast__body">
-          <p className="custom-toast__title">{resolvedTitle}</p>
-          {message ? <p className="custom-toast__message">{message}</p> : null}
-        </div>
-
-        <IconButton
-          className="custom-toast__close"
-          onClick={onClose}
-          aria-label="Đóng thông báo"
-          size="small"
-        >
-          <FontAwesomeIcon icon={faXmark} />
-        </IconButton>
-      </div>
-    </Snackbar>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+          >
+            {message}
+          </Typography>
+        </Box>
+      </Stack>
+    </Box>
   )
 }
-
-export default memo(CustomToast)
