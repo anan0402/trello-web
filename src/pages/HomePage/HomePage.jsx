@@ -1,7 +1,12 @@
 import EmptyState from '@/components/molecules/EmptyState/EmptyState'
 import DefaultLayout from '@/components/templates/DefaultLayout/DefaultLayout'
+import { profile } from '../../services/auth.service'
 
 function HomePage() {
+  const getProfile = async () => {
+    const response = await profile()
+    return response.data
+  }
   return (
     <DefaultLayout>
       <EmptyState
@@ -9,7 +14,7 @@ function HomePage() {
         description="Atomic Design scaffolding is set up. Continue migrating components feature by feature."
         ctaLabel="Get started"
         onCtaClick={() => {
-          // TODO: 接上你的业务逻辑（比如路由跳转/打开弹窗）
+          getProfile()
         }}
       />
     </DefaultLayout>

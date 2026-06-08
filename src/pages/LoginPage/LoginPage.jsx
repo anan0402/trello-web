@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import Alert from '@mui/material/Alert'
@@ -8,13 +9,17 @@ import Link from '@mui/material/Link'
 import TextField from '@mui/material/TextField'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useEffect, useState } from 'react'
-import { Link as RouterLink, useSearchParams } from 'react-router'
+import { Link as RouterLink, useNavigate, useSearchParams } from 'react-router'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
 import CustomButton from '@/components/atoms/CustomButton/CustomButton'
 import CustomCheckBox from '@/components/atoms/CustomCheckBox/CustomCheckBox'
 import './LoginPage.css'
+import { useDispatch } from 'react-redux'
+import { getErrorMessage } from '@/utils/getErrorMessage'
+import { showErrorToast, showSuccessToast } from '../../components/atoms/CustomToast'
+import { loginUserAPI } from '../../redux/userSlice/userSlice'
 
 const validationMessages = {
   emailRequired: 'Vui lòng nhập email',
@@ -37,6 +42,8 @@ function LoginPage() {
   const registeredEmail = searchParams.get('registeredEmail')
   const verifyEmail = searchParams.get('verifyEmail')
   const [showPassword, setShowPassword] = useState(false)
+  const dispatch = useDispatch()
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -58,8 +65,17 @@ function LoginPage() {
     }
   }, [verifyEmail, registeredEmail, setValue])
 
-  const onSubmit = (formValues) => {
-    console.log('Login submit:', formValues)
+  const onSubmit = async (formValues) => {
+    try {
+      const res = await dispatch(loginUserAPI(formValues)).unwrap();
+      if(res){
+        showSuccessToast('Đăng nhập thành công!')
+        navigate('/')
+      }
+    } catch (error) {
+      const errorMessage = getErrorMessage(error, 'Đăng nhập thất bại!')
+      showErrorToast(errorMessage)
+    }
   }
 
   return (
