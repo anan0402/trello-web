@@ -7,6 +7,7 @@ function HomePage() {
     const response = await profile()
     return response.data
   }
+
   return (
     <DefaultLayout>
       <EmptyState

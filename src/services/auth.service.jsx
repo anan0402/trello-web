@@ -32,3 +32,13 @@ export const profile = async () => {
   const response = await authorizeAxiosInstance.get('/v1/users/profile')
   return response.data
 }
+
+export const logout = async () => {
+  const response = await authorizeAxiosInstance.post('/v1/users/logout')
+  return response.data
+}
+
+export const refreshToken = async () => {
+  const response = await authorizeAxiosInstance.post('/v1/users/refresh-token')
+  return response.data
+}

@@ -1,5 +1,6 @@
+
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { login } from "../../services/auth.service";
+import { login, logout } from "../../services/auth.service";
 
 const initialState = {
   currentUser: null,
@@ -9,6 +10,12 @@ export const loginUserAPI = createAsyncThunk('user/loginUserAPI', async ({ email
   const response = await login({ email, password })
   return response;
 });
+
+export const logoutUserAPI = createAsyncThunk('user/logoutUserAPI', async () => {
+  const response = await logout()
+  return response;
+});
+
 
 const userSlice = createSlice({
   name: "user",
@@ -20,6 +27,9 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(loginUserAPI.fulfilled, (state, action) => {
       state.currentUser = action.payload;
+    });
+    builder.addCase(logoutUserAPI.fulfilled, (state) => { 
+      state.currentUser = null;
     });
   },
 
