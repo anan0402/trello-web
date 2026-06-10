@@ -7,7 +7,8 @@ export const environment = {
     ? import.meta.env.VITE_API_LOCAL_BASE_URL
     : import.meta.env.VITE_API_PRODUCTION_BASE_URL,
   isDev,
-  isProd
+  isProd,
+  googleClientId: import.meta.env.VITE_GOOGLE_CLIENT_ID
 }
 
 export default environment
