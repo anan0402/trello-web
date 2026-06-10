@@ -1,6 +1,6 @@
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { login, logout } from "../../services/auth.service";
+import { login, loginWithGoogle, logout } from "../../services/auth.service";
 
 const initialState = {
   currentUser: null,
@@ -16,6 +16,10 @@ export const logoutUserAPI = createAsyncThunk('user/logoutUserAPI', async () => 
   return response;
 });
 
+export const loginWithGoogleAPI = createAsyncThunk('user/loginWithGoogleAPI', async ({ credential }) => {
+  const response = await loginWithGoogle({ credential })
+  return response;
+});
 
 const userSlice = createSlice({
   name: "user",
@@ -30,6 +34,9 @@ const userSlice = createSlice({
     });
     builder.addCase(logoutUserAPI.fulfilled, (state) => { 
       state.currentUser = null;
+    });
+    builder.addCase(loginWithGoogleAPI.fulfilled, (state, action) => {
+      state.currentUser = action.payload;
     });
   },
 

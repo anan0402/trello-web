@@ -60,6 +60,7 @@ function SignupPage() {
     }
   }
 
+  
   return (
     <div className="signup-page">
       <div className="signup-card">
@@ -133,9 +134,6 @@ function SignupPage() {
                 Đăng ký
               </CustomButton>
 
-              <CustomButton variable="outline" size="large" fullWidth>
-                Đăng ký bằng Google
-              </CustomButton>
             </form>
 
             <p className="signup-card__footer">

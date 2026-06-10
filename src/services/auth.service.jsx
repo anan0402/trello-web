@@ -45,7 +45,8 @@ export const refreshToken = async () => {
 
 
 export const loginWithGoogle = async ({ credential }) => {
-  const response = await authorizeAxiosInstance.post('/v1/users/login-google', {
+  console.log('credential', credential)
+  const response = await authorizeAxiosInstance.post('/v1/users/login-with-google', {
     credential
   })
   return response.data

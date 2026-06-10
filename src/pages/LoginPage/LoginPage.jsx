@@ -22,9 +22,8 @@ import {
   showErrorToast,
   showSuccessToast,
 } from "../../components/atoms/CustomToast";
-import { loginUserAPI } from "../../redux/userSlice/userSlice";
+import { loginUserAPI, loginWithGoogleAPI } from "../../redux/userSlice/userSlice";
 import { GoogleLogin } from "@react-oauth/google";
-import { loginWithGoogle } from "../../services/auth.service";
 
 const validationMessages = {
   emailRequired: "Vui lòng nhập email",
@@ -88,7 +87,7 @@ function LoginPage() {
 
   const onGoogleLoginSuccess = async (credentialResponse) => {
     try {
-      const res = await loginWithGoogle(credentialResponse);
+      const res = await dispatch(loginWithGoogleAPI(credentialResponse)).unwrap();
       if (res) {
         showSuccessToast("Đăng nhập thành công!");
         navigate("/");
