@@ -1,15 +1,13 @@
 import Box from '@mui/material/Box'
 
 import AppHeader from '@/components/organisms/AppHeader/AppHeader'
+import './DefaultLayout.css'
 
-/**
- * Template: 页面通用布局（Header + 内容区）
- */
 function DefaultLayout({ children }) {
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+    <Box className="default-layout">
       <AppHeader />
-      <Box component="main">{children}</Box>
+      <Box component="main" className="default-layout-main">{children}</Box>
     </Box>
   )
 }

@@ -66,14 +66,11 @@ function SignupPage() {
       <div className="signup-card">
         <div className="signup-card__hero">
           <p className="signup-card__title">
-            Tạo tài khoản mới.
+            Đăng ký
           </p>
         </div>
-
         <div className="signup-card__form-wrap">
           <div className="signup-card__form">
-            <p className="signup-card__form-title">Đăng ký</p>
-
             <form
               onSubmit={handleSubmit(onSubmit)}
               noValidate

@@ -102,8 +102,11 @@ function LoginPage() {
     <div className="login-page">
       <div className="login-card">
         <div className="login-card__hero">
-          <p className="login-card__title">Chào mừng bạn quay lại.</p>
-          <div className="login-card__alert-wrap">
+          <p className="login-card__title">Đăng nhập</p>
+        </div>
+
+        <div className="login-card__form-wrap">
+           <div className="login-card__alert-wrap">
             {verifyEmail && (
               <Alert severity="success" className="login-card__alert">
                 Email <strong>{verifyEmail}</strong> đã được xác thực. Bạn có
@@ -119,11 +122,7 @@ function LoginPage() {
               </Alert>
             )}
           </div>
-        </div>
-
-        <div className="login-card__form-wrap">
           <div className="login-card__form">
-            <p className="login-card__form-title">Đăng nhập</p>
             <form
               onSubmit={handleSubmit(onSubmit)}
               noValidate

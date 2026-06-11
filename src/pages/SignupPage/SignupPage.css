@@ -6,13 +6,13 @@
   padding: 32px 16px;
   background:
     radial-gradient(circle at top left, var(--app-bg-color-light), transparent 26%),
-    radial-gradient(circle at bottom right, rgba(194, 210, 164, 0.48), transparent 30%),
-    linear-gradient(135deg, var(--app-bg-color) 0%, #d0c8bc 56%, #c2b8a8 100%);
+    radial-gradient(circle at bottom right, rgba(162, 176, 135, 0.48), transparent 30%),
+    linear-gradient(135deg, var(--app-bg-color) 0%, #e3e0dd 56%, #c7c4be 100%);
 }
 
 .signup-card {
   width: 100%;
-  max-width: 1080px;
+  max-width: 500px;
   overflow: hidden;
   border-radius: 24px;
   display: grid;
@@ -57,7 +57,6 @@
 
 .signup-card__form {
   width: 100%;
-  max-width: 420px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -92,16 +91,13 @@
 }
 
 @media (min-width: 900px) {
-  .signup-card {
-    grid-template-columns: 1.05fr 0.95fr;
-  }
 
   .signup-card__hero,
   .signup-card__form-wrap {
-    padding: 56px;
+    padding: 26px;
   }
 
   .signup-card__title {
-    font-size: 3rem;
+    font-size: 2.5rem;
   }
 }

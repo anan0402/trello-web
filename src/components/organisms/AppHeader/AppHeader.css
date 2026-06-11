@@ -1,0 +1,44 @@
+.app-header {
+  background: transparent !important;
+  border-bottom: 1px solid var(--app-border-color) !important;
+  box-shadow: none !important;
+  color: var(--app-text-color) !important;
+}
+
+.app-header-title {
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.app-header-icon {
+  font-size: 1.5rem;
+  color: var(--app-button-color);
+}
+
+.app-header-spacer {
+  flex: 1;
+}
+
+.app-header-avatar {
+  background-color: var(--app-button-color) !important;
+  cursor: pointer;
+  height: 30px !important;
+  width: 30px !important;
+}
+
+
+.app-menu-item .MuiPaper-root {
+  width: 120px;
+  top: 49px !important;
+  border-radius: 4px !important;
+}
+
+.app-menu-item .MuiMenuItem-root {
+  color: var(--app-text-color);
+}
+
+.app-menu-item .MuiMenuItem-root:hover {
+  background-color: var(--app-bg-color-light);
+}

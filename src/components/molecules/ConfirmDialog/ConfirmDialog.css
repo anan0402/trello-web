@@ -1,0 +1,25 @@
+.confirm-dialog .MuiPaper-root {
+  width: 400px;
+  border-radius: 8px;
+}
+
+.confirm-dialog-title {
+  color: #000 !important;
+  font-weight: 700 !important;
+  border-bottom: 1px solid var(--app-border-color) !important;
+}
+
+.confirm-dialog-content {
+  padding: 24px !important;
+}
+
+.confirm-dialog-content p {
+  color: var(--app-text-color);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.confirm-dialog-actions {
+  padding: 16px !important;
+  gap: 8px;
+}
