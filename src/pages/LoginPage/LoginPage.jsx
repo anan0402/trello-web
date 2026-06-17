@@ -6,7 +6,6 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Link from "@mui/material/Link";
-import TextField from "@mui/material/TextField";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { Link as RouterLink, useNavigate, useSearchParams } from "react-router";
@@ -15,6 +14,7 @@ import * as yup from "yup";
 
 import CustomButton from "@/components/atoms/CustomButton/CustomButton";
 import CustomCheckBox from "@/components/atoms/CustomCheckBox/CustomCheckBox";
+import CustomTextField from "@/components/atoms/CustomTextField/CustomTextField";
 import "./LoginPage.css";
 import { useDispatch } from "react-redux";
 import { getErrorMessage } from "@/utils/getErrorMessage";
@@ -80,8 +80,15 @@ function LoginPage() {
         navigate("/");
       }
     } catch (error) {
-      const errorMessage = getErrorMessage(error, "Đăng nhập thất bại!");
-      showErrorToast(errorMessage);
+      // Check if error is due to unverified account (status 403)
+      if (error.response?.status === 403) {
+        navigate(`/account/verification?email=${encodeURIComponent(formValues.email)}`);
+        showErrorToast('Tài khoản chưa được xác thực. Vui lòng nhập mã OTP.');
+      } else {
+
+        const errorMessage = getErrorMessage(error, "Đăng nhập thất bại!");
+        showErrorToast(errorMessage);
+      }
     }
   };
 
@@ -93,8 +100,15 @@ function LoginPage() {
         navigate("/");
       }
     } catch (error) {
-      const errorMessage = getErrorMessage(error, "Đăng nhập thất bại!");
-      showErrorToast(errorMessage);
+      // Check if error is due to unverified account (status 403)
+      if (error.response?.status === 403) {
+        // For Google login, we might not have the email readily available
+        // You may need to decode the credential to get the email
+        showErrorToast('Tài khoản chưa được xác thực. Vui lòng liên hệ quản trị viên.');
+      } else {
+        const errorMessage = getErrorMessage(error, "Đăng nhập thất bại!");
+        showErrorToast(errorMessage);
+      }
     }
   }
 
@@ -117,8 +131,15 @@ function LoginPage() {
             {!verifyEmail && registeredEmail && (
               <Alert severity="warning" className="login-card__alert">
                 Cần xác thực email <strong>{registeredEmail}</strong>. Vui lòng
-                kiểm tra hộp thư và nhấn vào liên kết xác thực trước khi đăng
-                nhập.
+                kiểm tra hộp thư để lấy mã OTP.{' '}
+                <Link
+                  component={RouterLink}
+                  to={`/account/verification?email=${encodeURIComponent(registeredEmail)}`}
+                  underline="always"
+                  sx={{ fontWeight: 600 }}
+                >
+                  Xác thực ngay
+                </Link>
               </Alert>
             )}
           </div>
@@ -128,18 +149,20 @@ function LoginPage() {
               noValidate
               style={{ display: "flex", flexDirection: "column", gap: 20 }}
             >
-              <TextField
+              <CustomTextField
                 fullWidth
                 label="Email"
                 type="email"
+                required
                 placeholder="ban@congty.com"
                 error={Boolean(errors.email)}
                 helperText={errors.email?.message}
                 {...register("email")}
               />
-              <TextField
+              <CustomTextField
                 fullWidth
                 label="Mật khẩu"
+                required
                 type={showPassword ? "text" : "password"}
                 placeholder="Nhập mật khẩu"
                 error={Boolean(errors.password)}

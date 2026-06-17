@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Avatar from '@mui/material/Avatar'
@@ -8,10 +9,22 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 
 import Text from '@/components/atoms/Text/Text'
+import CustomButton from '@/components/atoms/CustomButton/CustomButton'
 import ConfirmDialog from '@/components/molecules/ConfirmDialog/ConfirmDialog'
 import './AppHeader.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPaw } from '@fortawesome/free-solid-svg-icons'
+import {
+  faPaw,
+  faUser,
+  faCog,
+  faQuestionCircle,
+  faSignOutAlt,
+  faPalette,
+  faChevronRight,
+  faStar
+} from '@fortawesome/free-solid-svg-icons'
+import Divider from '@mui/material/Divider'
+import ListItemIcon from '@mui/material/ListItemIcon'
 import { selectCurrentUser } from '@/redux/userSlice/userSlice'
 import { logoutUserAPI } from '../../../redux/userSlice/userSlice'
 
@@ -21,6 +34,7 @@ function AppHeader() {
   const [openConfirm, setOpenConfirm] = useState(false)
   const currentUser = useSelector(selectCurrentUser)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const handleOpen = (e) => setAnchorEl(e.currentTarget)
   const handleClose = () => setAnchorEl(null)
@@ -34,10 +48,15 @@ function AppHeader() {
     setOpenConfirm(false)
     // TODO: Call logout API
     dispatch(logoutUserAPI())
-    
   }
 
-  console.log('Current user in AppHeader:', currentUser)
+  const handleLogin = () => {
+    navigate('/login')
+  }
+
+  const handleSignUp = () => {
+    navigate('/signup')
+  }
 
   return (
     <AppBar position="static" className="app-header">
@@ -47,23 +66,91 @@ function AppHeader() {
           Daily days
         </Text>
         <Box className="app-header-spacer" />
-        <Avatar
-          className="app-header-avatar"
-          src={currentUser?.avatar || currentUser?.picture}
-          alt={currentUser?.username || currentUser?.name}
-          onClick={handleOpen}
-        />
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-          className="app-menu-item"
-        >
-          <MenuItem onClick={handleClose}>Profile</MenuItem>
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
-        </Menu>
+        {currentUser ? (
+          <>
+            <Avatar
+              className="app-header-avatar"
+              src={currentUser?.avatar || currentUser?.picture}
+              alt={currentUser?.username || currentUser?.name}
+              onClick={handleOpen}
+            />
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+              className="app-menu-item"
+            >
+              <Box className="menu-header">
+                <Avatar
+                  className="app-header-avatar"
+                  src={currentUser?.avatar || currentUser?.picture}
+                  alt={currentUser?.username || currentUser?.name}
+                  sx={{ width: 32, height: 32 }}
+                />
+                <Box className="menu-header-info">
+                  <Text className="menu-header-name">
+                    {currentUser?.username || currentUser?.name}
+                  </Text>
+                  <Text className="menu-header-plan">Free</Text>
+                </Box>
+                <FontAwesomeIcon icon={faChevronRight} className="menu-header-arrow" />
+              </Box>
+
+              <Divider />
+
+              <MenuItem onClick={handleClose}>
+                <ListItemIcon>
+                  <FontAwesomeIcon icon={faUser} className="menu-icon" />
+                </ListItemIcon>
+                Profile
+                <FontAwesomeIcon icon={faChevronRight} className="menu-item-arrow" />
+              </MenuItem>
+
+              <MenuItem onClick={handleClose}>
+                <ListItemIcon>
+                  <FontAwesomeIcon icon={faCog} className="menu-icon" />
+                </ListItemIcon>
+                Settings
+              </MenuItem>
+
+              <MenuItem onClick={handleClose}>
+                <ListItemIcon>
+                  <FontAwesomeIcon icon={faQuestionCircle} className="menu-icon" />
+                </ListItemIcon>
+                Help
+                <FontAwesomeIcon icon={faChevronRight} className="menu-item-arrow" />
+              </MenuItem>
+
+              <Divider />
+
+              <MenuItem onClick={handleLogout}>
+                <ListItemIcon>
+                  <FontAwesomeIcon icon={faSignOutAlt} className="menu-icon" />
+                </ListItemIcon>
+                Log out
+              </MenuItem>
+            </Menu>
+          </>
+        ) : (
+          <Box className="auth-buttons">
+            <CustomButton
+              variable="outline"
+              onClick={handleLogin}
+              className="auth-button-login"
+            >
+              Login
+            </CustomButton>
+            <CustomButton
+              variable="primary"
+              onClick={handleSignUp}
+              className="auth-button-signup"
+            >
+              Sign Up
+            </CustomButton>
+          </Box>
+        )}
         <ConfirmDialog
           open={openConfirm}
           title="Xác nhận đăng xuất"

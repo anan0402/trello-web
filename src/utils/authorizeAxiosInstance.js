@@ -27,6 +27,7 @@ let refreshTokenPromise = null;
 authorizeAxiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
+        
         if (error.response?.status === 401) {
             authStore.dispatch(logoutUserAPI());
         }
@@ -52,6 +53,8 @@ authorizeAxiosInstance.interceptors.response.use(
                 return authorizeAxiosInstance(originalRequest);
             });
         }
+        return Promise.reject(error.response || error);
+
     }
 );
 

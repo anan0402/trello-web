@@ -6,20 +6,45 @@ const initialState = {
   currentUser: null,
 }
 
-export const loginUserAPI = createAsyncThunk('user/loginUserAPI', async ({ email, password }) => {
-  const response = await login({ email, password })
-  return response;
-});
+export const loginUserAPI = createAsyncThunk(
+  'user/loginUserAPI',
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      const response = await login({ email, password })
+      return response;
+    } catch (error) {
+      // Pass the full error object to the component
+      
+      return rejectWithValue(error);
+    }
+  }
+);
 
-export const logoutUserAPI = createAsyncThunk('user/logoutUserAPI', async () => {
-  const response = await logout()
-  return response;
-});
+export const logoutUserAPI = createAsyncThunk(
+  'user/logoutUserAPI',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await logout()
+      return response;
+    } catch (error) {
+      // Pass the full error object to the component
+      return rejectWithValue(error);
+    }
+  }
+);
 
-export const loginWithGoogleAPI = createAsyncThunk('user/loginWithGoogleAPI', async ({ credential }) => {
-  const response = await loginWithGoogle({ credential })
-  return response;
-});
+export const loginWithGoogleAPI = createAsyncThunk(
+  'user/loginWithGoogleAPI',
+  async ({ credential }, { rejectWithValue }) => {
+    try {
+      const response = await loginWithGoogle({ credential })
+      return response;
+    } catch (error) {
+      // Pass the full error object to the component
+      return rejectWithValue(error);
+    }
+  }
+);
 
 const userSlice = createSlice({
   name: "user",

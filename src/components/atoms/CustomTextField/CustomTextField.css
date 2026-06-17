@@ -1,0 +1,44 @@
+.custom-text-field-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.custom-text-field-label {
+  color: var(--app-text-color);
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.custom-text-field-label.error {
+  color: #d32f2f;
+}
+
+.custom-text-field-required {
+  color: #d32f2f;
+  margin-left: 4px;
+  font-weight: 600;
+}
+
+.custom-text-field {
+  width: 100%;
+}
+
+.custom-text-field .MuiInputLabel-root {
+  display: none;
+}
+
+.custom-text-field .MuiOutlinedInput-notchedOutline legend {
+  display: none;
+}
+
+.custom-text-field .MuiOutlinedInput-root {
+  display: flex;
+  align-items: center;
+}
+
+.custom-text-field .MuiOutlinedInput-input {
+  padding: 8px 14px;
+}

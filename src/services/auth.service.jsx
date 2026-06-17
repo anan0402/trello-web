@@ -19,6 +19,14 @@ export const verifyAccount = async ({ email, token }) => {
   return response.data
 }
 
+export const resendOtp = async ({ email }) => {
+  const response = await authorizeAxiosInstance.post('/v1/users/resend-otp', {
+    email
+  })
+
+  return response.data
+}
+
 export const login = async ({ email, password }) => {
   const response = await authorizeAxiosInstance.post('/v1/users/login', {
     email,

@@ -3,7 +3,6 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import Link from '@mui/material/Link'
-import TextField from '@mui/material/TextField'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Link as RouterLink, useNavigate } from 'react-router'
 import { useForm } from 'react-hook-form'
@@ -11,6 +10,7 @@ import { useState } from 'react'
 import * as yup from 'yup'
 
 import CustomButton from '@/components/atoms/CustomButton/CustomButton'
+import CustomTextField from '@/components/atoms/CustomTextField/CustomTextField'
 import { register as registerAccount } from '@/services/auth.service'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import './SignupPage.css'
@@ -52,15 +52,24 @@ function SignupPage() {
   const onSubmit = async (formValues) => {
     try {
       await registerAccount(formValues)
-      navigate(`/login?registeredEmail=${encodeURIComponent(formValues.email)}`)
-      showSuccessToast('Đăng ký tài khoản thành công.')
+      showSuccessToast('Đăng ký tài khoản thành công. Vui lòng kiểm tra email để lấy mã OTP.')
+      navigate(`/account/verification?email=${encodeURIComponent(formValues.email)}`)
     } catch (error) {
       const errorMessage = getErrorMessage(error, 'Đăng ký thất bại!')
-      showErrorToast(errorMessage)
+
+      // Check if error is due to already registered account
+      if (error.response?.status === 409 || errorMessage.includes('đã tồn tại')) {
+        showErrorToast('Email đã được đăng ký. Chuyển đến trang xác thực...')
+
+        navigate(`/account/verification?email=${encodeURIComponent(formValues.email)}`)
+
+      } else {
+        showErrorToast(errorMessage)
+      }
     }
   }
 
-  
+
   return (
     <div className="signup-page">
       <div className="signup-card">
@@ -76,7 +85,7 @@ function SignupPage() {
               noValidate
               style={{ display: 'flex', flexDirection: 'column', gap: 20 }}
             >
-              <TextField
+              <CustomTextField
                 fullWidth
                 label="Họ và tên"
                 placeholder="Nhập họ và tên"
@@ -84,18 +93,20 @@ function SignupPage() {
                 helperText={errors.name?.message}
                 {...register('name')}
               />
-              <TextField
+              <CustomTextField
                 fullWidth
                 label="Email"
+                required
                 type="email"
                 placeholder="ban@congty.com"
                 error={Boolean(errors.email)}
                 helperText={errors.email?.message}
                 {...register('email')}
               />
-              <TextField
+              <CustomTextField
                 fullWidth
                 label="Mật khẩu"
+                required
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Nhập mật khẩu"
                 error={Boolean(errors.password)}

@@ -34,6 +34,10 @@ const routers = createBrowserRouter([
     element: <GuestRoute />,
     children: [
       {
+        path: "/",
+        element: <HomePage />,
+      },
+      {
         path: "/login",
         element: <LoginPage />,
       },
@@ -47,10 +51,7 @@ const routers = createBrowserRouter([
   {
     element: <ProtectedRoute />,
     children: [
-      {
-        path: "/",
-        element: <HomePage />,
-      },
+      
       {
         path: "/problem-demo",
         element: <ProblemDemoPage />,
