@@ -100,7 +100,7 @@ function AccountVerification() {
 
     setIsSubmitting(true)
     try {
-      await verifyAccount({ email, token: otpCode })
+      await verifyAccount({ email, otp: otpCode })
       setStatus('success')
       showSuccessToast('Xác thực thành công.')
     } catch (error) {

@@ -7,6 +7,7 @@ import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
+import { environment } from '@/utils/environment'
 
 import Text from '@/components/atoms/Text/Text'
 import CustomButton from '@/components/atoms/CustomButton/CustomButton'
@@ -19,9 +20,7 @@ import {
   faCog,
   faQuestionCircle,
   faSignOutAlt,
-  faPalette,
   faChevronRight,
-  faStar
 } from '@fortawesome/free-solid-svg-icons'
 import Divider from '@mui/material/Divider'
 import ListItemIcon from '@mui/material/ListItemIcon'
@@ -35,6 +34,12 @@ function AppHeader() {
   const currentUser = useSelector(selectCurrentUser)
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
+  const getAvatarSrc = (avatar) => {
+    if (!avatar) return ''
+    if (avatar.startsWith('http://') || avatar.startsWith('https://')) return avatar
+    return `${environment.apiBaseUrl}${avatar}`
+  }
 
   const handleOpen = (e) => setAnchorEl(e.currentTarget)
   const handleClose = () => setAnchorEl(null)
@@ -70,8 +75,7 @@ function AppHeader() {
           <>
             <Avatar
               className="app-header-avatar"
-              src={currentUser?.avatar || currentUser?.picture}
-              alt={currentUser?.username || currentUser?.name}
+              src={getAvatarSrc(currentUser?.avatar || currentUser?.picture)}
               onClick={handleOpen}
             />
             <Menu
@@ -85,8 +89,7 @@ function AppHeader() {
               <Box className="menu-header">
                 <Avatar
                   className="app-header-avatar"
-                  src={currentUser?.avatar || currentUser?.picture}
-                  alt={currentUser?.username || currentUser?.name}
+                  src={getAvatarSrc(currentUser?.avatar || currentUser?.picture)}
                   sx={{ width: 32, height: 32 }}
                 />
                 <Box className="menu-header-info">

@@ -10,10 +10,10 @@ export const register = async ({ name, email, password }) => {
   return response.data
 }
 
-export const verifyAccount = async ({ email, token }) => {
+export const verifyAccount = async ({ email, otp }) => {
   const response = await authorizeAxiosInstance.post('/v1/users/verify', {
     email,
-    token
+    otp
   })
 
   return response.data
@@ -53,7 +53,6 @@ export const refreshToken = async () => {
 
 
 export const loginWithGoogle = async ({ credential }) => {
-  console.log('credential', credential)
   const response = await authorizeAxiosInstance.post('/v1/users/login-with-google', {
     credential
   })

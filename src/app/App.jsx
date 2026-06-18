@@ -34,10 +34,6 @@ const routers = createBrowserRouter([
     element: <GuestRoute />,
     children: [
       {
-        path: "/",
-        element: <HomePage />,
-      },
-      {
         path: "/login",
         element: <LoginPage />,
       },
@@ -45,25 +41,25 @@ const routers = createBrowserRouter([
         path: "/signup",
         element: <SignupPage />,
       },
+      {
+        path: "/account/verification",
+        element: <AccountVerification />,
+      },
     ],
   },
-
   {
     element: <ProtectedRoute />,
     children: [
-      
       {
         path: "/problem-demo",
         element: <ProblemDemoPage />,
       },
     ],
   },
-
   {
-    path: "/account/verification",
-    element: <AccountVerification />,
+    path: "/",
+    element: <HomePage />,
   },
-
   {
     path: "/404",
     element: <NotFound404 />,

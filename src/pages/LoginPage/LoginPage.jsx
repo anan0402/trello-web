@@ -1,4 +1,3 @@
-/* eslint-disable no-empty */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import Alert from "@mui/material/Alert";
@@ -7,8 +6,8 @@ import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Link from "@mui/material/Link";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useEffect, useState } from "react";
-import { Link as RouterLink, useNavigate, useSearchParams } from "react-router";
+import { useState } from "react";
+import { Link as RouterLink, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
@@ -45,16 +44,14 @@ const loginSchema = yup.object({
 });
 
 function LoginPage() {
-  const [searchParams] = useSearchParams();
-  const registeredEmail = searchParams.get("registeredEmail");
-  const verifyEmail = searchParams.get("verifyEmail");
   const [showPassword, setShowPassword] = useState(false);
+  const [isNeedVerifyEmail, setIsNeedVerifyEmail] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
-    setValue,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(loginSchema),
@@ -65,12 +62,14 @@ function LoginPage() {
     },
   });
 
-  useEffect(() => {
-    const emailFromParams = verifyEmail || registeredEmail;
-    if (emailFromParams) {
-      setValue("email", emailFromParams);
-    }
-  }, [verifyEmail, registeredEmail, setValue]);
+  const handleGoToVerification = () => {
+    const email = getValues("email");
+
+    if (!email) return;
+
+    navigate(`/account/verification?email=${encodeURIComponent(email)}`);
+    setIsNeedVerifyEmail(false);
+  };
 
   const onSubmit = async (formValues) => {
     try {
@@ -81,9 +80,10 @@ function LoginPage() {
       }
     } catch (error) {
       // Check if error is due to unverified account (status 403)
-      if (error.response?.status === 403) {
-        navigate(`/account/verification?email=${encodeURIComponent(formValues.email)}`);
-        showErrorToast('Tài khoản chưa được xác thực. Vui lòng nhập mã OTP.');
+      if (error?.status === 403) {
+        const errorMessage = getErrorMessage(error, "Đăng nhập thất bại!");
+        showErrorToast(errorMessage);
+        setIsNeedVerifyEmail(true);
       } else {
 
         const errorMessage = getErrorMessage(error, "Đăng nhập thất bại!");
@@ -101,16 +101,18 @@ function LoginPage() {
       }
     } catch (error) {
       // Check if error is due to unverified account (status 403)
-      if (error.response?.status === 403) {
+      if (error?.status === 403) {
         // For Google login, we might not have the email readily available
         // You may need to decode the credential to get the email
-        showErrorToast('Tài khoản chưa được xác thực. Vui lòng liên hệ quản trị viên.');
+        const errorMessage = getErrorMessage(error, "Đăng nhập thất bại!");
+        showErrorToast(errorMessage);
       } else {
         const errorMessage = getErrorMessage(error, "Đăng nhập thất bại!");
         showErrorToast(errorMessage);
       }
     }
   }
+
 
   return (
     <div className="login-page">
@@ -121,22 +123,16 @@ function LoginPage() {
 
         <div className="login-card__form-wrap">
            <div className="login-card__alert-wrap">
-            {verifyEmail && (
-              <Alert severity="success" className="login-card__alert">
-                Email <strong>{verifyEmail}</strong> đã được xác thực. Bạn có
-                thể đăng nhập ngay.
-              </Alert>
-            )}
-
-            {!verifyEmail && registeredEmail && (
+            {isNeedVerifyEmail && (
               <Alert severity="warning" className="login-card__alert">
-                Cần xác thực email <strong>{registeredEmail}</strong>. Vui lòng
+                Cần xác thực email <strong>{getValues("email")}</strong>. Vui lòng
                 kiểm tra hộp thư để lấy mã OTP.{' '}
                 <Link
-                  component={RouterLink}
-                  to={`/account/verification?email=${encodeURIComponent(registeredEmail)}`}
+                  component="button"
+                  type="button"
                   underline="always"
                   sx={{ fontWeight: 600 }}
+                  onClick={handleGoToVerification}
                 >
                   Xác thực ngay
                 </Link>
@@ -218,6 +214,9 @@ function LoginPage() {
               </CustomButton>
 
               <GoogleLogin
+                 onError={(error) => {
+                  console.log('Login Failed', error);
+                }}
                 onSuccess={onGoogleLoginSuccess}
               />
             </form>
