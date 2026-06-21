@@ -1,0 +1,80 @@
+.simple-card-layout {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  background:
+    radial-gradient(circle at top left, var(--app-bg-color-light), transparent 26%),
+    radial-gradient(circle at bottom right, rgba(194, 210, 164, 0.48), transparent 30%),
+    linear-gradient(135deg, var(--app-bg-color) 0%, #d0c8bc 56%, #c2b8a8 100%);
+}
+
+.simple-card {
+  width: 100%;
+  max-width: 600px;
+  overflow: hidden;
+  border-radius: 24px;
+  border: 1px solid var(--app-border-color);
+  background-color: var(--app-surface-color);
+  box-shadow: 0 24px 80px rgba(73, 67, 54, 0.18);
+}
+
+.simple-card__content {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  justify-content: center;
+  color: var(--app-primary-color);
+}
+
+.simple-card__header {
+  text-align: center;
+}
+
+.simple-card__title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  color: var(--app-primary-color);
+}
+
+.simple-card__description {
+  font-size: 0.95rem;
+  margin: 0;
+  color: var(--app-text-color);
+  line-height: 1.5;
+}
+
+.simple-card__footer {
+  margin-top: 12px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.simple-card__link {
+  color: var(--app-primary-color);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.simple-card__link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .simple-card__title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .simple-card__content {
+    padding: 56px;
+  }
+
+  .simple-card__title {
+    font-size: 2rem;
+  }
+}

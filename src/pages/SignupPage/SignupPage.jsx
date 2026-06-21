@@ -11,9 +11,9 @@ import * as yup from 'yup'
 
 import CustomButton from '@/components/atoms/CustomButton/CustomButton'
 import CustomTextField from '@/components/atoms/CustomTextField/CustomTextField'
+import AuthCardLayout from '@/components/templates/AuthCardLayout/AuthCardLayout'
 import { register as registerAccount } from '@/services/auth.service'
 import { getErrorMessage } from '@/utils/getErrorMessage'
-import './SignupPage.css'
 import { showErrorToast, showSuccessToast } from '../../components/atoms/CustomToast'
 
 const validationMessages = {
@@ -71,20 +71,12 @@ function SignupPage() {
 
 
   return (
-    <div className="signup-page">
-      <div className="signup-card">
-        <div className="signup-card__hero">
-          <p className="signup-card__title">
-            Đăng ký
-          </p>
-        </div>
-        <div className="signup-card__form-wrap">
-          <div className="signup-card__form">
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              noValidate
-              style={{ display: 'flex', flexDirection: 'column', gap: 20 }}
-            >
+    <AuthCardLayout title="Đăng ký">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        style={{ display: 'flex', flexDirection: 'column', gap: 20 }}
+      >
               <CustomTextField
                 fullWidth
                 label="Họ và tên"
@@ -142,18 +134,15 @@ function SignupPage() {
                 Đăng ký
               </CustomButton>
 
-            </form>
+      </form>
 
-            <p className="signup-card__footer">
-              Đã có tài khoản?{' '}
-              <Link component={RouterLink} to="/login" underline="none" alignItems="center">
-                <span className="signup-card__link">Đăng nhập ngay</span>
-              </Link>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+      <p className="auth-card__footer">
+        Đã có tài khoản?{' '}
+        <Link component={RouterLink} to="/login" underline="none" alignItems="center">
+          <span className="auth-card__link">Đăng nhập ngay</span>
+        </Link>
+      </p>
+    </AuthCardLayout>
   )
 }
 

@@ -14,7 +14,7 @@ import * as yup from "yup";
 import CustomButton from "@/components/atoms/CustomButton/CustomButton";
 import CustomCheckBox from "@/components/atoms/CustomCheckBox/CustomCheckBox";
 import CustomTextField from "@/components/atoms/CustomTextField/CustomTextField";
-import "./LoginPage.css";
+import AuthCardLayout from "@/components/templates/AuthCardLayout/AuthCardLayout";
 import { useDispatch } from "react-redux";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import {
@@ -114,128 +114,112 @@ function LoginPage() {
   }
 
 
+  const verificationAlert = isNeedVerifyEmail ? (
+    <Alert severity="warning" className="auth-card__alert">
+      Cần xác thực email <strong>{getValues("email")}</strong>. Vui lòng
+      kiểm tra hộp thư để lấy mã OTP.{" "}
+      <Link
+        component="button"
+        type="button"
+        underline="always"
+        sx={{ fontWeight: 600 }}
+        onClick={handleGoToVerification}
+      >
+        Xác thực ngay
+      </Link>
+    </Alert>
+  ) : null;
+
   return (
-    <div className="login-page">
-      <div className="login-card">
-        <div className="login-card__hero">
-          <p className="login-card__title">Đăng nhập</p>
-        </div>
+    <AuthCardLayout title="Đăng nhập" alert={verificationAlert}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        style={{ display: "flex", flexDirection: "column", gap: 20 }}
+      >
+        <CustomTextField
+          fullWidth
+          label="Email"
+          type="email"
+          required
+          placeholder="ban@congty.com"
+          error={Boolean(errors.email)}
+          helperText={errors.email?.message}
+          {...register("email")}
+        />
+        <CustomTextField
+          fullWidth
+          label="Mật khẩu"
+          required
+          type={showPassword ? "text" : "password"}
+          placeholder="Nhập mật khẩu"
+          error={Boolean(errors.password)}
+          helperText={errors.password?.message}
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    edge="end"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    aria-label={
+                      showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"
+                    }
+                  >
+                    <FontAwesomeIcon
+                      icon={showPassword ? faEyeSlash : faEye}
+                      style={{ fontSize: 14 }}
+                    />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            },
+          }}
+          {...register("password")}
+        />
 
-        <div className="login-card__form-wrap">
-           <div className="login-card__alert-wrap">
-            {isNeedVerifyEmail && (
-              <Alert severity="warning" className="login-card__alert">
-                Cần xác thực email <strong>{getValues("email")}</strong>. Vui lòng
-                kiểm tra hộp thư để lấy mã OTP.{' '}
-                <Link
-                  component="button"
-                  type="button"
-                  underline="always"
-                  sx={{ fontWeight: 600 }}
-                  onClick={handleGoToVerification}
-                >
-                  Xác thực ngay
-                </Link>
-              </Alert>
-            )}
-          </div>
-          <div className="login-card__form">
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              noValidate
-              style={{ display: "flex", flexDirection: "column", gap: 20 }}
-            >
-              <CustomTextField
-                fullWidth
-                label="Email"
-                type="email"
-                required
-                placeholder="ban@congty.com"
-                error={Boolean(errors.email)}
-                helperText={errors.email?.message}
-                {...register("email")}
-              />
-              <CustomTextField
-                fullWidth
-                label="Mật khẩu"
-                required
-                type={showPassword ? "text" : "password"}
-                placeholder="Nhập mật khẩu"
-                error={Boolean(errors.password)}
-                helperText={errors.password?.message}
-                slotProps={{
-                  input: {
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          edge="end"
-                          onClick={() => setShowPassword((prev) => !prev)}
-                          aria-label={
-                            showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"
-                          }
-                        >
-                          <FontAwesomeIcon
-                            icon={showPassword ? faEyeSlash : faEye}
-                            style={{ fontSize: 14 }}
-                          />
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  },
-                }}
-                {...register("password")}
-              />
+        <CustomButton
+          size="large"
+          fullWidth
+          variable="primary"
+          type="submit"
+          disabled={isSubmitting}
+        >
+          Đăng nhập
+        </CustomButton>
 
-              <div className="login-card__form-row">
-                <FormControlLabel
-                  control={
-                    <CustomCheckBox size="small" {...register("rememberMe")} />
-                  }
-                  label="Ghi nhớ tôi"
-                />
-                <Link
-                  component={RouterLink}
-                  to="/signup"
-                  underline="none"
-                  alignItems="center"
-                >
-                  <p className="login-card__link">Quên mật khẩu?</p>
-                </Link>
-              </div>
+        <GoogleLogin
+          onError={(error) => {
+            console.log("Login Failed", error);
+          }}
+          onSuccess={onGoogleLoginSuccess}
+        />
+      </form>
 
-              <CustomButton
-                size="large"
-                fullWidth
-                variable="primary"
-                type="submit"
-                disabled={isSubmitting}
-              >
-                Đăng nhập
-              </CustomButton>
-
-              <GoogleLogin
-                 onError={(error) => {
-                  console.log('Login Failed', error);
-                }}
-                onSuccess={onGoogleLoginSuccess}
-              />
-            </form>
-
-            <p className="login-card__footer">
-              Chưa có tài khoản?{" "}
-              <Link
-                component={RouterLink}
-                to="/signup"
-                underline="none"
-                alignItems="center"
-              >
-                <span className="login-card__link">Tạo tài khoản</span>
-              </Link>
-            </p>
-          </div>
+      <div className="auth-card__footer-row">
+        <p className="auth-card__footer">
+          Chưa có tài khoản?{" "}
+          <Link
+            component={RouterLink}
+            to="/signup"
+            underline="none"
+            alignItems="center"
+          >
+            <span className="auth-card__link">Tạo tài khoản</span>
+          </Link>
+        </p>
+        <div className="auth-card__form-row">
+          <Link
+            component={RouterLink}
+            to="/signup"
+            underline="none"
+            alignItems="center"
+          >
+            <p className="auth-card__link">Quên mật khẩu?</p>
+          </Link>
         </div>
       </div>
-    </div>
+    </AuthCardLayout>
   );
 }
 
