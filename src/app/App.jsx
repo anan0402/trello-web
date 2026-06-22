@@ -1,5 +1,6 @@
 import { Navigate, createBrowserRouter, RouterProvider ,Outlet} from "react-router";
 import AccountVerification from "@/features/AccountVerification";
+import ForgotPassword from "@/features/ForgotPassword";
 import NotFound404 from "@/features/404";
 import HomePage from "@/pages/HomePage/HomePage";
 import LoginPage from "@/pages/LoginPage/LoginPage";
@@ -44,6 +45,10 @@ const routers = createBrowserRouter([
       {
         path: "/account/verification",
         element: <AccountVerification />,
+      },
+      {
+        path: "/forgot-password",
+        element: <ForgotPassword />,
       },
     ],
   },

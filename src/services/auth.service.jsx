@@ -59,6 +59,31 @@ export const loginWithGoogle = async ({ credential }) => {
   return response.data
 }
 
+export const forgotPassword = async ({ email }) => {
+  const response = await authorizeAxiosInstance.post('/v1/users/forgot-password', {
+    email
+  })
+  return response.data
+}
 
+export const verifyForgotPasswordOtp = async ({ email, otp }) => {
+  const response = await authorizeAxiosInstance.post('/v1/users/otp-reset-password', {
+    email,
+    otp
+  })
+  return response.data
+}
 
+export const resetPassword = async ({ newPassword }) => {
+  const response = await authorizeAxiosInstance.post('/v1/users/reset-password', {
+    newPassword
+  })
+  return response.data
+}
 
+export const resendOtpChangePassword = async ({ email }) => {
+  const response = await authorizeAxiosInstance.post('/v1/users/resend-otp-change-password', {
+    email
+  })
+  return response.data
+}

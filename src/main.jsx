@@ -7,6 +7,9 @@ import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 import { injectStore } from "./utils/authorizeAxiosInstance.js";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { queryClient } from "./lib/queryClient.js";
 import environment from "./utils/environment.js";
 
 const persistor = persistStore(store);
@@ -19,7 +22,10 @@ createRoot(document.getElementById("root")).render(
   <GoogleOAuthProvider clientId={environment.googleClientId}>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <App />
+        <QueryClientProvider client={queryClient}>
+          <App />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
       </PersistGate>
     </Provider>
   </GoogleOAuthProvider>,

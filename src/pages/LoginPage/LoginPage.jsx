@@ -211,7 +211,7 @@ function LoginPage() {
         <div className="auth-card__form-row">
           <Link
             component={RouterLink}
-            to="/signup"
+            to="/forgot-password"
             underline="none"
             alignItems="center"
           >

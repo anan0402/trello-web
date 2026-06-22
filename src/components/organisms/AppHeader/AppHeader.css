@@ -17,8 +17,14 @@
   color: var(--app-button-color);
 }
 
+.app-tool-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
 .app-header-spacer {
-  flex: 1;
+  flex: 0.5;
 }
 
 .app-header-avatar {
@@ -130,4 +136,71 @@
   padding: 6px 16px !important;
   font-size: 14px !important;
   font-weight: 500 !important;
+}
+
+
+.app-header-left {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 36px;
+}
+
+/* Search responsive */
+.search-icon-mobile {
+  display: none !important;
+  font-size: 20px !important;
+  cursor: pointer !important;
+}
+
+
+/* Drawer styling */
+.search-drawer .MuiDrawer-paper {
+  width: 100%;
+  max-width: 400px;
+  background-color: var(--app-surface-color) !important;
+  padding: 0;
+}
+
+.search-drawer-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.search-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--app-border-color);
+}
+
+.search-drawer-title {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+}
+
+.search-drawer-body {
+  padding: 20px;
+}
+
+.search-drawer-body .custom-autocomplete-search-box {
+  max-width: 100%;
+}
+
+/* Responsive - Medium screens and below */
+@media (max-width: 768px) {
+  .search-box-desktop {
+    display: none !important;
+  }
+
+  .search-icon-mobile {
+    display: inline-flex !important;
+  }
+
+  .app-header-left {
+    flex: 0 !important;
+    gap: 12px !important;
+  }
 }
