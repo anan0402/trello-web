@@ -7,11 +7,10 @@ import { search } from '@/services/search.service'
  * @param {object} options - React Query options
  * @returns {object} React Query result
  */
-export const useSearch = (query, options = {}) => {
+export const useSearch = (query) => {
   return useQuery({
     queryKey: ['search', query],
     queryFn: () => search(query),
     enabled: !!query && query.trim().length > 0, // Only fetch when query is not empty
-    ...options,
   })
 }

@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
-import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
@@ -12,8 +11,9 @@ import { environment } from '@/utils/environment'
 import Text from '@/components/atoms/Text/Text'
 import CustomButton from '@/components/atoms/CustomButton/CustomButton'
 import CustomAutocompleteSearchBox from '@/components/atoms/CustomAutocompleteSearchBox'
+import CustomAvatar from '@/components/atoms/CustomAvatar/CustomAvatar'
 import ConfirmDialog from '@/components/molecules/ConfirmDialog/ConfirmDialog'
-import { search } from '@/services/search.service'
+import { useSearch } from '@/hooks/useSearch'
 import './AppHeader.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -32,21 +32,20 @@ import IconButton from '@mui/material/IconButton'
 import Drawer from '@mui/material/Drawer'
 import { selectCurrentUser } from '@/redux/userSlice/userSlice'
 import { logoutUserAPI } from '../../../redux/userSlice/userSlice'
+import { getAvatarSrc } from '../../../utils/funtion'
 
 
 function AppHeader() {
   const [anchorEl, setAnchorEl] = useState(null)
   const [openConfirm, setOpenConfirm] = useState(false)
   const [openSearchDrawer, setOpenSearchDrawer] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
   const currentUser = useSelector(selectCurrentUser)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const getAvatarSrc = (avatar) => {
-    if (!avatar) return ''
-    if (avatar.startsWith('http://') || avatar.startsWith('https://')) return avatar
-    return `${environment.apiBaseUrl}${avatar}`
-  }
+  const { data: searchResults, isLoading } = useSearch(searchQuery)
+
 
   const handleOpen = (e) => setAnchorEl(e.currentTarget)
   const handleClose = () => setAnchorEl(null)
@@ -70,63 +69,87 @@ function AppHeader() {
     navigate('/signup')
   }
 
-  const handleSearchFetch = async (query) => {
-    try {
-      const results = await search(query)
-      return results
-    } catch (error) {
-      console.error('Search error:', error)
-      return []
-    }
+  const handleProfile = () => {
+    handleClose()
+    navigate(`/profile/${currentUser?._id}`)
   }
+
 
   const handleSearchSelect = (selectedItem) => {
     console.log('Selected item:', selectedItem)
     setOpenSearchDrawer(false)
-    // TODO: Navigate to selected item or perform action
+    if (selectedItem?._id) {
+      navigate(`/profile/${selectedItem._id}`)
+    }
   }
 
   const handleToggleSearchDrawer = () => {
     setOpenSearchDrawer(!openSearchDrawer)
   }
 
+  const renderSearchOption = (props, option) => {
+    const { key, ...otherProps } = props
+    return (
+      <li key={key} {...otherProps}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, width: '100%' }}>
+          <CustomAvatar
+            src={getAvatarSrc(option?.avatar)}
+            size="small"
+            fallback={option?.username?.[0]}
+          />
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Text sx={{ fontWeight: 500, fontSize: '14px' }}>
+              {option?.username}
+            </Text>
+          </Box>
+        </Box>
+      </li>
+    )
+  }
+
+
   return (
     <AppBar position="static" className="app-header">
       <Toolbar className="app-tool-bar">
         <div className="app-header-left">
-          <Text variant="h6" className="app-header-title">
-            <FontAwesomeIcon icon={faPaw} className="app-header-icon" />
-            <div className="search-box-desktop">Daily days</div>
+          <Text variant="h6" className="app-header-title" >
+            <FontAwesomeIcon icon={faPaw} className="app-header-icon" onClick={()=> navigate(`/`)} />
+            <div className="search-box-desktop"  onClick={()=> navigate(`/`)}>Daily days</div>
           </Text>
-          <div className="search-box-desktop">
-            <CustomAutocompleteSearchBox
-              isSearchApi={true}
-              fetchOptions={handleSearchFetch}
-              onSelect={handleSearchSelect}
-              placeholder="Tìm kiếm..."
-              getOptionLabel={(option) => option?.name || option?.label || ''}
-            />
-          </div>
-           <IconButton
-          className="search-icon-mobile"
-          onClick={handleToggleSearchDrawer}
-          sx={{ color: 'var(--app-text-color)' }}
-        >
-          <FontAwesomeIcon icon={faSearch} />
-        </IconButton>
+          {currentUser && <>
+            <div className="search-box-desktop">
+              <CustomAutocompleteSearchBox
+                options={searchResults}
+                loading={isLoading}
+                onQueryChange={setSearchQuery}
+                onSelect={handleSearchSelect}
+                placeholder="Tìm kiếm..."
+                getOptionLabel={(option) => option?.username || ''}
+                renderOption={renderSearchOption}
+              />
+            </div>
+            <IconButton
+              className="search-icon-mobile"
+              onClick={handleToggleSearchDrawer}
+              sx={{ color: 'var(--app-text-color)' }}
+            >
+              <FontAwesomeIcon icon={faSearch} />
+            </IconButton>
+          </>
+          }
         </div>
 
         <Box className="app-header-spacer" />
 
-       
+
 
         <Box sx={{ width: '24px' }} />
         {currentUser ? (
           <>
-            <Avatar
-              className="app-header-avatar"
+            <CustomAvatar
               src={getAvatarSrc(currentUser?.avatar || currentUser?.picture)}
               onClick={handleOpen}
+              fallback={currentUser?.username?.[0] || currentUser?.name?.[0]}
             />
             <Menu
               anchorEl={anchorEl}
@@ -137,10 +160,10 @@ function AppHeader() {
               className="app-menu-item"
             >
               <Box className="menu-header">
-                <Avatar
-                  className="app-header-avatar"
+                <CustomAvatar
                   src={getAvatarSrc(currentUser?.avatar || currentUser?.picture)}
-                  sx={{ width: 32, height: 32 }}
+                  size="small"
+                  fallback={currentUser?.username?.[0] || currentUser?.name?.[0]}
                 />
                 <Box className="menu-header-info">
                   <Text className="menu-header-name">
@@ -153,7 +176,7 @@ function AppHeader() {
 
               <Divider />
 
-              <MenuItem onClick={handleClose}>
+              <MenuItem onClick={handleProfile}>
                 <ListItemIcon>
                   <FontAwesomeIcon icon={faUser} className="menu-icon" />
                 </ListItemIcon>
@@ -235,11 +258,13 @@ function AppHeader() {
           </Box>
           <Box className="search-drawer-body">
             <CustomAutocompleteSearchBox
-              isSearchApi={true}
-              fetchOptions={handleSearchFetch}
+              options={searchResults}
+              loading={isLoading}
+              onQueryChange={setSearchQuery}
               onSelect={handleSearchSelect}
               placeholder="Tìm kiếm..."
-              getOptionLabel={(option) => option?.name || option?.label || ''}
+              getOptionLabel={(option) => option?.username || ''}
+              renderOption={renderSearchOption}
             />
           </Box>
         </Box>

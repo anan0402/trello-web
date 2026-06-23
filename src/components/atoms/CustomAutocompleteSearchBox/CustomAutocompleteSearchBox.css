@@ -7,7 +7,7 @@
 .custom-autocomplete-search-box .MuiOutlinedInput-root {
   padding: 4px 8px !important;
   height: 40px;
-  background-color: var(--app-surface-color);
+  background-color: transparent;
   border: 1px solid var(--app-border-color);
   border-radius: 8px;
   transition: all 0.2s ease;
@@ -61,7 +61,7 @@
 }
 
 .custom-autocomplete-search-box .MuiAutocomplete-paper {
-  background-color: var(--app-surface-color);
+  background-color: var(--app-surface-color) !important;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }

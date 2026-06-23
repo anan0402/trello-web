@@ -1,8 +1,7 @@
-import { memo, useState, useEffect, useCallback } from 'react'
+import { memo, useState, useEffect } from 'react'
 import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
 import CircularProgress from '@mui/material/CircularProgress'
-import Box from '@mui/material/Box'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -10,20 +9,32 @@ import { useDebounce } from '@/hooks'
 import './CustomAutocompleteSearchBox.css'
 
 /**
- * CustomAutocompleteSearchBox - An autocomplete search box with API or local search support
- * @param {boolean} isSearchApi - If true, uses API search; if false, uses local options (default: true)
- * @param {Function} fetchOptions - Async function to fetch search results from backend (required if isSearchApi is true)
- * @param {Array} localOptions - Array of local options (used if isSearchApi is false)
+ * CustomAutocompleteSearchBox - A simplified autocomplete search box
+ * @param {Array} options - Options to display (provided by parent)
+ * @param {Function} onQueryChange - Callback when search query changes. If provided, parent controls search (external). If not provided, local filtering is used.
+ * @param {boolean} loading - Loading state (only used when onQueryChange is provided)
  * @param {Function} onSelect - Callback when an option is selected
- * @param {string} placeholder - Placeholder text
- * @param {number} debounceDelay - Debounce delay in ms (default: 500, only for API search)
+ * @param {string} placeholder - Placeholder text (default: 'Tìm kiếm...')
+ * @param {number} debounceDelay - Debounce delay in ms (default: 500)
  * @param {Function} getOptionLabel - Function to extract label from option (default: option => option.label)
- * @param {Function} renderOption - Custom render function for options
+ * @param {Function} renderOption - Custom render function for each option item in dropdown. Signature: (props, option) => ReactNode
+ *
+ * Example renderOption:
+ * ```jsx
+ * renderOption={(props, option) => (
+ *   <li {...props} key={option.id}>
+ *     <div>
+ *       <strong>{option.name}</strong>
+ *       <div style={{ fontSize: '0.85em', color: '#666' }}>{option.description}</div>
+ *     </div>
+ *   </li>
+ * )}
+ * ```
  */
 function CustomAutocompleteSearchBox({
-  isSearchApi = true,
-  fetchOptions,
-  localOptions = [],
+  options = [],
+  onQueryChange,
+  loading = false,
   onSelect,
   placeholder = 'Tìm kiếm...',
   debounceDelay = 500,
@@ -32,59 +43,37 @@ function CustomAutocompleteSearchBox({
   ...props
 }) {
   const [open, setOpen] = useState(false)
-  const [options, setOptions] = useState(isSearchApi ? [] : localOptions)
-  const [loading, setLoading] = useState(false)
   const [inputValue, setInputValue] = useState('')
 
-  // Use debounce hook for API search
+  // Debounce the input value
   const debouncedInputValue = useDebounce(inputValue, debounceDelay)
 
-  // Update options when localOptions changes (for non-API mode)
+  // Determine if using external (parent-controlled) search
+  const isExternalSearch = !!onQueryChange
+
+  // Notify parent of query changes when using external search
   useEffect(() => {
-    if (!isSearchApi) {
-      setOptions(localOptions)
+    if (isExternalSearch) {
+      onQueryChange(debouncedInputValue)
     }
-  }, [localOptions, isSearchApi])
+  }, [debouncedInputValue])
 
-  const fetchData = useCallback(
-    async (query) => {
-      if (!isSearchApi) return
-
-      if (!query || query.trim() === '') {
-        setOptions([])
-        return
-      }
-
-      setLoading(true)
-      try {
-        const results = await fetchOptions(query)
-        setOptions(results || [])
-      } catch (error) {
-        console.error('Error fetching search results:', error)
-        setOptions([])
-      } finally {
-        setLoading(false)
-      }
-    },
-    [fetchOptions, isSearchApi]
-  )
-
-  // Fetch data when debounced value changes
-  useEffect(() => {
-    if (!isSearchApi) return
-
-    if (!debouncedInputValue) {
-      setOptions([])
-      return
-    }
-
-    fetchData(debouncedInputValue)
-  }, [debouncedInputValue, fetchData, isSearchApi])
+  // For local search, filter options based on input
+  const filteredOptions = isExternalSearch
+    ? options
+    : options.filter((option) => {
+        const label = getOptionLabel(option)
+        return label.toLowerCase().includes(inputValue.toLowerCase())
+      })
 
   const handleSelect = (event, value) => {
     if (value && onSelect) {
       onSelect(value)
     }
+  }
+
+  const handleClear = () => {
+    setInputValue('')
   }
 
   return (
@@ -93,13 +82,30 @@ function CustomAutocompleteSearchBox({
       open={open}
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
-      options={options}
-      loading={isSearchApi && loading}
+      options={filteredOptions}
+      loading={isExternalSearch && loading}
       getOptionLabel={getOptionLabel}
-      onInputChange={(event, newInputValue) => {
-        setInputValue(newInputValue)
+      clearOnBlur={false}
+      freeSolo
+      inputValue={inputValue}
+      onInputChange={(event, newInputValue, reason) => {
+        if (reason === 'clear') {
+          handleClear()
+        } else {
+          setInputValue(newInputValue)
+        }
       }}
       onChange={handleSelect}
+      slotProps={{
+        paper: {
+          sx: {
+            backgroundColor: 'var(--app-surface-color)',
+            borderRadius: '8px',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+            marginTop: '4px'
+          }
+        }
+      }}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -115,7 +121,7 @@ function CustomAutocompleteSearchBox({
               ),
               endAdornment: (
                 <>
-                  {isSearchApi && loading ? <CircularProgress color="inherit" size={20} /> : null}
+                  {isExternalSearch && loading ? <CircularProgress color="inherit" size={20} /> : null}
                   {params.InputProps.endAdornment}
                 </>
               ),
@@ -125,7 +131,7 @@ function CustomAutocompleteSearchBox({
       )}
       renderOption={renderOption}
       noOptionsText={
-        isSearchApi
+        isExternalSearch
           ? inputValue
             ? 'Không tìm thấy kết quả'
             : 'Nhập để tìm kiếm'

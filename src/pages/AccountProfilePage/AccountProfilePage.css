@@ -1,0 +1,69 @@
+.account-profile-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.account-profile-card {
+  background-color: var(--app-surface-color);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.account-profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--app-border-color);
+}
+
+.account-profile-title {
+  color: var(--app-text-color);
+  font-weight: 600;
+}
+
+.account-profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 24px;
+}
+
+.account-profile-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 8px;
+}
+
+.account-profile-submit {
+  background-color: var(--app-button-color) !important;
+  color: white !important;
+  padding: 10px 24px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+.account-profile-submit:hover {
+  opacity: 0.9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.account-profile-loading,
+.account-profile-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .account-profile-container {
+    padding: 16px;
+  }
+}

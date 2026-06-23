@@ -6,6 +6,7 @@ import HomePage from "@/pages/HomePage/HomePage";
 import LoginPage from "@/pages/LoginPage/LoginPage";
 import ProblemDemoPage from "@/pages/ProblemDemoPage/ProblemDemoPage";
 import SignupPage from "@/pages/SignupPage/SignupPage";
+import AccountProfilePage from "@/pages/AccountProfilePage/AccountProfilePage";
 import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../redux/userSlice/userSlice";
@@ -58,6 +59,10 @@ const routers = createBrowserRouter([
       {
         path: "/problem-demo",
         element: <ProblemDemoPage />,
+      },
+      {
+        path: "/profile/:id",
+        element: <AccountProfilePage />,
       },
     ],
   },

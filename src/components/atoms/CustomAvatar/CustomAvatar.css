@@ -1,0 +1,44 @@
+.custom-avatar {
+  background-color: var(--app-button-color) !important;
+  cursor: pointer;
+  color: white;
+  font-weight: 600;
+}
+
+.custom-avatar-clickable {
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.custom-avatar-clickable:hover {
+  opacity: 0.85;
+}
+
+.custom-avatar-clickable:active {
+  opacity: 0.7;
+}
+
+/* Size variants */
+.custom-avatar-small {
+  width: 32px !important;
+  height: 32px !important;
+  font-size: 14px !important;
+}
+
+.custom-avatar-medium {
+  width: 30px !important;
+  height: 30px !important;
+  font-size: 14px !important;
+}
+
+.custom-avatar-large {
+  width: 80px !important;
+  height: 80px !important;
+  font-size: 32px !important;
+}
+
+.custom-avatar-xlarge {
+  width: 120px !important;
+  height: 120px !important;
+  font-size: 48px !important;
+}

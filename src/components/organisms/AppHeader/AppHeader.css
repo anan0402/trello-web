@@ -15,6 +15,7 @@
 .app-header-icon {
   font-size: 1.5rem;
   color: var(--app-button-color);
+  cursor: pointer;
 }
 
 .app-tool-bar {
@@ -26,14 +27,6 @@
 .app-header-spacer {
   flex: 0.5;
 }
-
-.app-header-avatar {
-  background-color: var(--app-button-color) !important;
-  cursor: pointer;
-  height: 30px !important;
-  width: 30px !important;
-}
-
 
 .app-menu-item .MuiPaper-root {
   width: 240px;
@@ -187,6 +180,10 @@
 
 .search-drawer-body .custom-autocomplete-search-box {
   max-width: 100%;
+}
+
+.search-box-desktop {
+  cursor: pointer;
 }
 
 /* Responsive - Medium screens and below */
