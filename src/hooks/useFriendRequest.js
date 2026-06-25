@@ -14,35 +14,39 @@ import {
  */
 export const useFriendRequest = (userId) => {
   const queryClient = useQueryClient()
-
-  const onSuccess = () => {
-    // Invalidate user details query to refetch the updated friend status
-    queryClient.invalidateQueries(['userDetails', userId])
-  }
-
   const sendRequest = useMutation({
     mutationFn: () => sendFriendRequest(userId),
-    onSuccess
+    onSuccess: () => {
+      queryClient.invalidateQueries(['userDetails', userId])
+    }
   })
 
   const acceptRequest = useMutation({
-    mutationFn: () => acceptFriendRequest(userId),
-    onSuccess
+    mutationFn: (requestId) => acceptFriendRequest(requestId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['userDetails', userId])
+    }
   })
 
   const rejectRequest = useMutation({
-    mutationFn: () => rejectFriendRequest(userId),
-    onSuccess
+    mutationFn: (requestId) => rejectFriendRequest(requestId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['userDetails', userId])
+    }
   })
 
   const cancelRequest = useMutation({
-    mutationFn: () => cancelFriendRequest(userId),
-    onSuccess
+    mutationFn: (requestId) => cancelFriendRequest(requestId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['userDetails', userId])
+    }
   })
 
   const unfriend = useMutation({
-    mutationFn: () => unfriendUser(userId),
-    onSuccess
+    mutationFn: (friendId) => unfriendUser(friendId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['userDetails', userId])
+    }
   })
 
   return {

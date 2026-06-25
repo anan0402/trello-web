@@ -36,9 +36,6 @@ function AccountProfilePage() {
   const isOwnProfile = currentUser?._id === id
   const isGoogleUser = user?.type === 'google'
 
-  // Get friend request status from user data (you may need to adjust this based on your API response)
-  const friendStatus = user?.friendStatus || FRIEND_REQUEST_STATUS.NONE
-
   useEffect(() => {
     if (user) {
       setFormData(prev => ({
@@ -50,6 +47,7 @@ function AccountProfilePage() {
   }, [user])
 
 
+  
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData(prev => ({
@@ -60,14 +58,11 @@ function AccountProfilePage() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // TODO: Implement update profile logic
-    console.log('Form submitted:', formData)
   }
 
-  const renderFriendRequestButtons = () => {
+  const renderFriendRequestButtons = (user) => {
     if (isOwnProfile) return null
-
-    switch (friendStatus) {
+    switch (user?.relationshipStatus) {
       case FRIEND_REQUEST_STATUS.NONE:
         return (
           <CustomButton
@@ -83,7 +78,7 @@ function AccountProfilePage() {
         return (
           <CustomButton
             variable="outline"
-            onClick={() => cancelRequest.mutate()}
+            onClick={() => cancelRequest.mutate(user?.requestId)}
             disabled={cancelRequest.isPending}
           >
             {cancelRequest.isPending ? 'Canceling...' : 'Cancel Request'}
@@ -95,14 +90,14 @@ function AccountProfilePage() {
           <Box sx={{ display: 'flex', gap: 2 }}>
             <CustomButton
               variable="primary"
-              onClick={() => acceptRequest.mutate()}
+              onClick={() => acceptRequest.mutate(user?.requestId)}
               disabled={acceptRequest.isPending}
             >
               {acceptRequest.isPending ? 'Accepting...' : 'Accept Request'}
             </CustomButton>
             <CustomButton
               variable="outline"
-              onClick={() => rejectRequest.mutate()}
+              onClick={() => rejectRequest.mutate(user?.requestId)}
               disabled={rejectRequest.isPending}
               sx={{ color: 'error.main', borderColor: 'error.main' }}
             >
@@ -115,7 +110,7 @@ function AccountProfilePage() {
         return (
           <CustomButton
             variable="outline"
-            onClick={() => unfriend.mutate()}
+            onClick={() => unfriend.mutate(user?.friendshipId)}
             disabled={unfriend.isPending}
             sx={{ color: 'error.main', borderColor: 'error.main' }}
           >
@@ -151,7 +146,6 @@ function AccountProfilePage() {
     )
   }
 
-  console.log('user', user)
 
   return (
     <DefaultLayout>
@@ -159,24 +153,22 @@ function AccountProfilePage() {
         <Card className="account-profile-card">
           <CardContent>
             <Box className="account-profile-header">
-              <div>
+              <div className ="account-profile-avatar">
                 <CustomAvatar
                   src={getAvatarSrc(user?.avatar || user?.picture)}
                   size="large"
                   fallback={user?.username?.[0] || user?.email?.[0]}
                 />
                 <Text variant="h4" className="account-profile-title">
-                  Account Profile
+                  {user?.username || user?.email}
                 </Text>
               </div>
               {!isOwnProfile && (
                 <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
-                  {renderFriendRequestButtons()}
+                  {renderFriendRequestButtons(user)}
                 </Box>
               )}
             </Box>
-
-
 
             <Box component="form" onSubmit={handleSubmit} className="account-profile-form">
               <CustomTextField

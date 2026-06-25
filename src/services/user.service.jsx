@@ -22,50 +22,56 @@ export const updateUserProfile = async (id) => {
 
 /**
  * Send friend request
- * @param {string} userId - Target user ID
+ * @param {string} targetUserId - Target user ID
  * @returns {Promise} Friend request response
  */
-export const sendFriendRequest = async (userId) => {
-  const response = await authorizeAxiosInstance.post(`/v1/users/${userId}/friend-request`)
-  return response.data
-}
-
-/**
- * Accept friend request
- * @param {string} userId - User ID who sent the request
- * @returns {Promise} Accept response
- */
-export const acceptFriendRequest = async (userId) => {
-  const response = await authorizeAxiosInstance.put(`/v1/users/${userId}/friend-request/accept`)
-  return response.data
-}
-
-/**
- * Reject friend request
- * @param {string} userId - User ID who sent the request
- * @returns {Promise} Reject response
- */
-export const rejectFriendRequest = async (userId) => {
-  const response = await authorizeAxiosInstance.put(`/v1/users/${userId}/friend-request/reject`)
+export const sendFriendRequest = async (targetUserId) => {
+  const response = await authorizeAxiosInstance.post(`/v1/friends/send-request`, { 
+    targetUserId: targetUserId 
+  })
   return response.data
 }
 
 /**
  * Cancel sent friend request
- * @param {string} userId - Target user ID
+ * @param {string} requestId - Target user ID
  * @returns {Promise} Cancel response
  */
-export const cancelFriendRequest = async (userId) => {
-  const response = await authorizeAxiosInstance.delete(`/v1/users/${userId}/friend-request`)
+export const cancelFriendRequest = async (requestId) => {
+  const response = await authorizeAxiosInstance.delete(`/v1/friends/cancel-request/${requestId}`)
+  return response.data
+}
+
+
+/**
+ * Accept friend request
+ * @param {string} requestId - User ID who sent the request
+ * @returns {Promise} Accept response
+ */
+export const acceptFriendRequest = async (requestId) => {
+  const response = await authorizeAxiosInstance.post(`/v1/friends/accept-request`, {
+    requestId: requestId
+  })
   return response.data
 }
 
 /**
+ * Reject friend request
+ * @param {string} requestId - Request ID to reject
+ * @returns {Promise} Reject response
+ */
+export const rejectFriendRequest = async (requestId) => {
+  const response = await authorizeAxiosInstance.delete(`/v1/friends/reject-request/${requestId}`)
+  return response.data
+}
+
+
+/**
  * Unfriend a user
- * @param {string} userId - Friend user ID
+ * @param {string} friendId - Friend user ID
  * @returns {Promise} Unfriend response
  */
-export const unfriendUser = async (userId) => {
-  const response = await authorizeAxiosInstance.delete(`/v1/users/${userId}/friend`)
+export const unfriendUser = async (friendId) => {
+  const response = await authorizeAxiosInstance.delete(`/v1/friends/unfriend/${friendId}`)
   return response.data
 }
