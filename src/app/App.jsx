@@ -7,6 +7,7 @@ import LoginPage from "@/pages/LoginPage/LoginPage";
 import ProblemDemoPage from "@/pages/ProblemDemoPage/ProblemDemoPage";
 import SignupPage from "@/pages/SignupPage/SignupPage";
 import AccountProfilePage from "@/pages/AccountProfilePage/AccountProfilePage";
+import ChatPage from "@/pages/ChatPage";
 import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../redux/userSlice/userSlice";
@@ -63,6 +64,10 @@ const routers = createBrowserRouter([
       {
         path: "/profile/:id",
         element: <AccountProfilePage />,
+      },
+      {
+        path: "/chat/:userId",
+        element: <ChatPage />,
       },
     ],
   },

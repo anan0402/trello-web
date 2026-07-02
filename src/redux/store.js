@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { userReducer } from "./userSlice/userSlice";
-import {  persistReducer } from 'redux-persist'      
+import { sidebarReducer } from "./sidebarSlice/sidebarSlice";
+import {  persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 
@@ -13,6 +14,7 @@ const rootPersistConfig = {
 //Thêm reducer vào đây qua hàm combine
 const reducers = combineReducers({
   user: userReducer,
+  sidebar: sidebarReducer,
 })
 
 const persistedReducer = persistReducer(rootPersistConfig, reducers)

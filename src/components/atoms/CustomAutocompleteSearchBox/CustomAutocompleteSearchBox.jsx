@@ -18,6 +18,7 @@ import './CustomAutocompleteSearchBox.css'
  * @param {number} debounceDelay - Debounce delay in ms (default: 500)
  * @param {Function} getOptionLabel - Function to extract label from option (default: option => option.label)
  * @param {Function} renderOption - Custom render function for each option item in dropdown. Signature: (props, option) => ReactNode
+ * @param {Object} sx - MUI sx prop for styling the Autocomplete component (e.g., width, margin, etc.)
  *
  * Example renderOption:
  * ```jsx
@@ -40,6 +41,7 @@ function CustomAutocompleteSearchBox({
   debounceDelay = 500,
   getOptionLabel = (option) => option?.label || '',
   renderOption,
+  sx,
   ...props
 }) {
   const [open, setOpen] = useState(false)
@@ -79,6 +81,7 @@ function CustomAutocompleteSearchBox({
   return (
     <Autocomplete
       className="custom-autocomplete-search-box"
+      sx={sx}
       open={open}
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
@@ -99,7 +102,6 @@ function CustomAutocompleteSearchBox({
       slotProps={{
         paper: {
           sx: {
-            backgroundColor: 'var(--app-surface-color)',
             borderRadius: '8px',
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
             marginTop: '4px'

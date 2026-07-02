@@ -25,13 +25,14 @@ import {
   faChevronRight,
   faSearch,
   faTimes,
+  faUsers,
 } from '@fortawesome/free-solid-svg-icons'
 import Divider from '@mui/material/Divider'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import IconButton from '@mui/material/IconButton'
-import Drawer from '@mui/material/Drawer'
 import { selectCurrentUser } from '@/redux/userSlice/userSlice'
 import { logoutUserAPI } from '../../../redux/userSlice/userSlice'
+import { toggleSidebar } from '@/redux/sidebarSlice/sidebarSlice'
 import { getAvatarSrc } from '../../../utils/funtion'
 
 
@@ -87,6 +88,10 @@ function AppHeader() {
     setOpenSearchDrawer(!openSearchDrawer)
   }
 
+  const handleToggleSidebar = () => {
+    dispatch(toggleSidebar())
+  }
+
   const renderSearchOption = (props, option) => {
     const { key, ...otherProps } = props
     return (
@@ -113,8 +118,8 @@ function AppHeader() {
       <Toolbar className="app-tool-bar">
         <div className="app-header-left">
           <Text variant="h6" className="app-header-title" >
-            <FontAwesomeIcon icon={faPaw} className="app-header-icon" onClick={()=> navigate(`/`)} />
-            <div className="search-box-desktop"  onClick={()=> navigate(`/`)}>Daily days</div>
+            <FontAwesomeIcon icon={faPaw} className="app-header-icon" onClick={() => navigate(`/`)} />
+            <div className="search-box-desktop" onClick={() => navigate(`/`)}>Daily days</div>
           </Text>
           {currentUser && <>
             <div className="search-box-desktop">
@@ -146,68 +151,78 @@ function AppHeader() {
         <Box sx={{ width: '24px' }} />
         {currentUser ? (
           <>
-            <CustomAvatar
-              src={getAvatarSrc(currentUser?.avatar || currentUser?.picture)}
-              onClick={handleOpen}
-              fallback={currentUser?.username?.[0] || currentUser?.name?.[0]}
-            />
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-              className="app-menu-item"
-            >
-              <Box className="menu-header">
-                <CustomAvatar
-                  src={getAvatarSrc(currentUser?.avatar || currentUser?.picture)}
-                  size="small"
-                  fallback={currentUser?.username?.[0] || currentUser?.name?.[0]}
-                />
-                <Box className="menu-header-info">
-                  <Text className="menu-header-name">
-                    {currentUser?.username || currentUser?.name}
-                  </Text>
-                  <Text className="menu-header-plan">Free</Text>
+            <div className="app-header-right">
+              <IconButton
+                onClick={handleToggleSidebar}
+                className="sidebar-toggle-button"
+                sx={{ color: 'var(--app-text-color)' }}
+              >
+                <FontAwesomeIcon icon={faUsers} />
+              </IconButton>
+              <CustomAvatar
+                src={getAvatarSrc(currentUser?.avatar || currentUser?.picture)}
+                onClick={handleOpen}
+                fallback={currentUser?.username?.[0] || currentUser?.name?.[0]}
+              />
+            </div>
+            {Boolean(anchorEl) &&
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                className="app-menu-item"
+              >
+                <Box className="menu-header">
+                  <CustomAvatar
+                    src={getAvatarSrc(currentUser?.avatar || currentUser?.picture)}
+                    size="small"
+                    fallback={currentUser?.username?.[0] || currentUser?.name?.[0]}
+                  />
+                  <Box className="menu-header-info">
+                    <Text className="menu-header-name">
+                      {currentUser?.username || currentUser?.name}
+                    </Text>
+                    <Text className="menu-header-plan">Free</Text>
+                  </Box>
+                  <FontAwesomeIcon icon={faChevronRight} className="menu-header-arrow" />
                 </Box>
-                <FontAwesomeIcon icon={faChevronRight} className="menu-header-arrow" />
-              </Box>
 
-              <Divider />
+                <Divider />
 
-              <MenuItem onClick={handleProfile}>
-                <ListItemIcon>
-                  <FontAwesomeIcon icon={faUser} className="menu-icon" />
-                </ListItemIcon>
-                Profile
-                <FontAwesomeIcon icon={faChevronRight} className="menu-item-arrow" />
-              </MenuItem>
+                <MenuItem onClick={handleProfile}>
+                  <ListItemIcon>
+                    <FontAwesomeIcon icon={faUser} className="menu-icon" />
+                  </ListItemIcon>
+                  Profile
+                  <FontAwesomeIcon icon={faChevronRight} className="menu-item-arrow" />
+                </MenuItem>
 
-              <MenuItem onClick={handleClose}>
-                <ListItemIcon>
-                  <FontAwesomeIcon icon={faCog} className="menu-icon" />
-                </ListItemIcon>
-                Settings
-              </MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <ListItemIcon>
+                    <FontAwesomeIcon icon={faCog} className="menu-icon" />
+                  </ListItemIcon>
+                  Settings
+                </MenuItem>
 
-              <MenuItem onClick={handleClose}>
-                <ListItemIcon>
-                  <FontAwesomeIcon icon={faQuestionCircle} className="menu-icon" />
-                </ListItemIcon>
-                Help
-                <FontAwesomeIcon icon={faChevronRight} className="menu-item-arrow" />
-              </MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <ListItemIcon>
+                    <FontAwesomeIcon icon={faQuestionCircle} className="menu-icon" />
+                  </ListItemIcon>
+                  Help
+                  <FontAwesomeIcon icon={faChevronRight} className="menu-item-arrow" />
+                </MenuItem>
 
-              <Divider />
+                <Divider />
 
-              <MenuItem onClick={handleLogout}>
-                <ListItemIcon>
-                  <FontAwesomeIcon icon={faSignOutAlt} className="menu-icon" />
-                </ListItemIcon>
-                Log out
-              </MenuItem>
-            </Menu>
+                <MenuItem onClick={handleLogout}>
+                  <ListItemIcon>
+                    <FontAwesomeIcon icon={faSignOutAlt} className="menu-icon" />
+                  </ListItemIcon>
+                  Log out
+                </MenuItem>
+              </Menu>}
           </>
         ) : (
           <Box className="auth-buttons">
@@ -238,37 +253,32 @@ function AppHeader() {
         />
       </Toolbar>
 
-      <Drawer
-        anchor="right"
-        open={openSearchDrawer}
-        onClose={() => setOpenSearchDrawer(false)}
-        className="search-drawer"
-      >
-        <Box className="search-drawer-content">
-          <Box className="search-drawer-header">
-            <Text variant="h6" className="search-drawer-title">
-              Tìm kiếm
-            </Text>
-            <IconButton
-              onClick={() => setOpenSearchDrawer(false)}
-              sx={{ color: 'var(--app-text-color)' }}
-            >
-              <FontAwesomeIcon icon={faTimes} />
-            </IconButton>
-          </Box>
-          <Box className="search-drawer-body">
-            <CustomAutocompleteSearchBox
-              options={searchResults}
-              loading={isLoading}
-              onQueryChange={setSearchQuery}
-              onSelect={handleSearchSelect}
-              placeholder="Tìm kiếm..."
-              getOptionLabel={(option) => option?.username || ''}
-              renderOption={renderSearchOption}
-            />
+      <>
+        {openSearchDrawer && (
+          <Box className="search-drawer-backdrop" onClick={() => setOpenSearchDrawer(false)} />
+        )}
+        <Box className={`search-drawer ${openSearchDrawer ? 'search-drawer-open' : ''}`}>
+          <Box className="search-drawer-content">
+            <Box className="search-drawer-header">
+              <Text variant="h6" className="search-drawer-title">
+                Tìm kiếm
+              </Text>
+            </Box>
+            <Box className="search-drawer-body">
+              <CustomAutocompleteSearchBox
+                options={searchResults}
+                loading={isLoading}
+                onQueryChange={setSearchQuery}
+                onSelect={handleSearchSelect}
+                placeholder="Tìm kiếm..."
+                getOptionLabel={(option) => option?.username || ''}
+                renderOption={renderSearchOption}
+                sx={{ width: '100%' }}
+              />
+            </Box>
           </Box>
         </Box>
-      </Drawer>
+      </>
     </AppBar>
   )
 }

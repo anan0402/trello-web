@@ -1,11 +1,28 @@
 .default-layout {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background:
     radial-gradient(circle at top left, var(--app-bg-color-light), transparent 26%),
     radial-gradient(circle at bottom right, rgba(162, 176, 135, 0.48), transparent 30%),
     linear-gradient(135deg, var(--app-bg-color) 0%, #e3e0dd 56%, #c7c4be 100%);
 }
 
+.default-layout-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
 .default-layout-main {
+  flex: 1;
   padding: 24px;
+  padding-right: 304px;
+  overflow-y: auto;
+}
+
+@media (max-width: 1024px) {
+  .default-layout-main {
+    padding-right: 24px;
+  }
 }
