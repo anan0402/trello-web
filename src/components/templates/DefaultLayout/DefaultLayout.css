@@ -9,20 +9,23 @@
 }
 
 .default-layout-content {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr;
   flex: 1;
   overflow: hidden;
 }
 
+.default-layout-content:not(.centered) {
+  grid-template-columns: 1fr 350px;
+}
+
 .default-layout-main {
-  flex: 1;
   padding: 24px;
-  padding-right: 304px;
   overflow-y: auto;
 }
 
 @media (max-width: 1024px) {
-  .default-layout-main {
-    padding-right: 24px;
+  .default-layout-content:not(.centered) {
+    grid-template-columns: 1fr;
   }
 }

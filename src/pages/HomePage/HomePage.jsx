@@ -9,7 +9,7 @@ function HomePage() {
   }
 
   return (
-    <DefaultLayout>
+    <DefaultLayout showSidebar={true}>
       <EmptyState
         title="Welcome to Trello Web"
         description="Atomic Design scaffolding is set up. Continue migrating components feature by feature."

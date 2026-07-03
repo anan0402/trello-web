@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Navigate, createBrowserRouter, RouterProvider ,Outlet} from "react-router";
 import AccountVerification from "@/features/AccountVerification";
 import ForgotPassword from "@/features/ForgotPassword";
@@ -11,6 +12,7 @@ import ChatPage from "@/pages/ChatPage";
 import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../redux/userSlice/userSlice";
+import { initSocket, disconnectSocket } from "@/utils/socket";
 
 function ProtectedRoute() {
   const currentUser = useSelector(selectCurrentUser);

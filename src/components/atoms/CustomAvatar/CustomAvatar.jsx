@@ -22,7 +22,6 @@ function CustomAvatar({
 }) {
   const sizeClass = `custom-avatar-${size}`
   const clickableClass = onClick ? 'custom-avatar-clickable' : ''
-
   return (
     <Avatar
       src={src}

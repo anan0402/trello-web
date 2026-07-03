@@ -36,7 +36,7 @@ import { toggleSidebar } from '@/redux/sidebarSlice/sidebarSlice'
 import { getAvatarSrc } from '../../../utils/funtion'
 
 
-function AppHeader() {
+function AppHeader({ showSidebar = false }) {
   const [anchorEl, setAnchorEl] = useState(null)
   const [openConfirm, setOpenConfirm] = useState(false)
   const [openSearchDrawer, setOpenSearchDrawer] = useState(false)
@@ -152,13 +152,15 @@ function AppHeader() {
         {currentUser ? (
           <>
             <div className="app-header-right">
-              <IconButton
-                onClick={handleToggleSidebar}
-                className="sidebar-toggle-button"
-                sx={{ color: 'var(--app-text-color)' }}
-              >
-                <FontAwesomeIcon icon={faUsers} />
-              </IconButton>
+              {showSidebar && (
+                <IconButton
+                  onClick={handleToggleSidebar}
+                  className="sidebar-toggle-button"
+                  sx={{ color: 'var(--app-text-color)' }}
+                >
+                  <FontAwesomeIcon icon={faUsers} />
+                </IconButton>
+              )}
               <CustomAvatar
                 src={getAvatarSrc(currentUser?.avatar || currentUser?.picture)}
                 onClick={handleOpen}

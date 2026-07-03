@@ -75,3 +75,12 @@ export const unfriendUser = async (friendId) => {
   const response = await authorizeAxiosInstance.delete(`/v1/friends/unfriend/${friendId}`)
   return response.data
 }
+
+/**
+ * Get list of friends
+ * @returns {Promise} List of friends
+ */
+export const getFriends = async () => {
+  const response = await authorizeAxiosInstance.get(`/v1/friends`)
+  return response.data
+}
