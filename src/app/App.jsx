@@ -10,9 +10,11 @@ import SignupPage from "@/pages/SignupPage/SignupPage";
 import AccountProfilePage from "@/pages/AccountProfilePage/AccountProfilePage";
 import ChatPage from "@/pages/ChatPage";
 import { ToastContainer } from "react-toastify";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useQueryClient } from "@tanstack/react-query";
 import { selectCurrentUser } from "../redux/userSlice/userSlice";
 import { initSocket, disconnectSocket } from "@/socket/socket";
+import { setSocketConnected, setSocketDisconnected } from "@/redux/socketSlice/socketSlice";
 
 function ProtectedRoute() {
   const currentUser = useSelector(selectCurrentUser);
@@ -90,6 +92,7 @@ const routers = createBrowserRouter([
 
 function App() {
   const currentUser = useSelector(selectCurrentUser);
+  const queryClient = useQueryClient();
 
   // Initialize socket connection when user is logged in (handles page refresh)
   useEffect(() => {
@@ -97,6 +100,8 @@ function App() {
       initSocket();
     } else {
       disconnectSocket();
+      // Clear all React Query cache when user logs out or refresh token expires
+      queryClient.clear();
     }
 
     // Cleanup on unmount

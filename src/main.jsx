@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 import { injectStore } from "./utils/authorizeAxiosInstance.js";
+import { injectSocketStore } from "./socket/socket.js";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -16,6 +17,9 @@ const persistor = persistStore(store);
 
 //Inject store to authorizeAxiosInstance vì authorizeAxiosInstance không phải là componenet file nên không thể sử dụng useSelector
 injectStore(store);
+
+//Inject store to socket để dispatch Redux actions
+injectSocketStore(store);
 
 createRoot(document.getElementById("root")).render(
   // <StrictMode>

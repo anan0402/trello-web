@@ -69,11 +69,10 @@ export const NOTIFICATION_EVENTS = {
 
 // Common Events
 export const COMMON_EVENTS = {
-  CONNECTION: 'connection',
+  CONNECT: 'connect',
   DISCONNECT: 'disconnect',
   ERROR: 'error',
   CONNECTION_ERROR: 'connection_error',
-  CONNECTED: 'connected'
 }
 
 // Export all events as a single object for convenience

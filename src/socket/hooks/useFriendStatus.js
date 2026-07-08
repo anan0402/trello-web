@@ -18,6 +18,7 @@ export const useFriendStatus = () => {
   const { data: friends = [], isLoading: loading } = useFriends()
   const [friendRequests, setFriendRequests] = useState([])
   const [friendRequestNotifications, setFriendRequestNotifications] = useState([])
+  const isSocketConnected = useSelector((state) => state.socket.isConnected)
 
   // Subscribe to friend request events
   // useEffect(() => {
@@ -60,15 +61,25 @@ export const useFriendStatus = () => {
 
   // Subscribe to friend status events (online/offline)
   useEffect(() => {
-
-    console.log('Subscribing to friend status events...')
+    // Wait for socket to be connected before subscribing
+    if (!isSocketConnected) {
+      // console.log('Socket not connected yet, skipping subscription')
+      return
+    }
 
     const unsubscribe = subscribeToFriendStatus({
-      onFriendOnline: ({ friendId }) => {
+      onFriendOnline: (data) => {
+        const userId = Array.isArray(data) ? data[0]?.userId : data?.userId
+
+        if (!userId) {
+          console.warn('No userId in friend_online event:', data)
+          return
+        }
+
         queryClient.setQueryData(['friends'], (prevFriends = []) =>
           prevFriends.map((friend) => {
             const friendData = friend.friendId || friend
-            if (friendData._id === friendId) {
+            if (friendData._id === userId) {
               if (friend.friendId) {
                 return {
                   ...friend,
@@ -81,11 +92,19 @@ export const useFriendStatus = () => {
           })
         )
       },
-      onFriendOffline: ({ friendId }) => {
+      onFriendOffline: (data) => {
+        // Server sends array: [{ userId: "..." }]
+        const userId = Array.isArray(data) ? data[0]?.userId : data?.userId
+
+        if (!userId) {
+          console.warn('No userId in friend_offline event:', data)
+          return
+        }
+
         queryClient.setQueryData(['friends'], (prevFriends = []) =>
           prevFriends.map((friend) => {
             const friendData = friend.friendId || friend
-            if (friendData._id === friendId) {
+            if (friendData._id === userId) {
               if (friend.friendId) {
                 return {
                   ...friend,
@@ -101,7 +120,7 @@ export const useFriendStatus = () => {
     })
 
     return unsubscribe
-  }, [queryClient])
+  }, [isSocketConnected, queryClient])
 
    
   // Action handlers
