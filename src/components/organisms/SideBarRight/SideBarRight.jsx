@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import Box from '@mui/material/Box'
@@ -6,32 +5,14 @@ import Text from '@/components/atoms/Text/Text'
 import CustomAvatar from '@/components/atoms/CustomAvatar/CustomAvatar'
 import { getAvatarSrc } from '@/utils/funtion'
 import { selectSidebarIsOpen, closeSidebar } from '@/redux/sidebarSlice/sidebarSlice'
-import { getFriends } from '@/services/user.service'
+import { useFriendStatus } from '@/socket/hooks/useFriendStatus'
 import './SideBarRight.css'
 
 function SideBarRight() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const isOpen = useSelector(selectSidebarIsOpen)
-  const [friends, setFriends] = useState([])
-  const [loading, setLoading] = useState(false)
-
-  useEffect(() => {
-    const fetchFriends = async () => {
-      try {
-        setLoading(true)
-        const response = await getFriends()
-        setFriends(response|| [])
-      } catch (error) {
-        console.error('Failed to fetch friends:', error)
-        setFriends([])
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchFriends()
-  }, [])
+  const { friends, loading } = useFriendStatus()
 
 
   const handleFriendClick = (friendId) => {
@@ -74,11 +55,11 @@ function SideBarRight() {
                 >
                   <Box className="friend-avatar-container">
                     <CustomAvatar
-                      src={getAvatarSrc(friendData.avatar)}
+                      src={friendData.avatar}
                       size="small"
                       fallback={friendData.username?.[0]}
                     />
-                    {friendData.online && <span className="online-indicator" />}
+                    {friendData.isOnline && <span className="online-indicator" />}
                   </Box>
 
                   <Box className="friend-info">
@@ -86,7 +67,7 @@ function SideBarRight() {
                       {friendData.username}
                     </Text>
                     <Text variant="caption" className="friend-status">
-                      {friendData.online ? 'Online' : 'Offline'}
+                      {friendData.isOnline ? 'Online' : 'Offline'}
                     </Text>
                   </Box>
                 </Box>

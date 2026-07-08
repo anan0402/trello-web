@@ -12,7 +12,7 @@ import ChatPage from "@/pages/ChatPage";
 import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../redux/userSlice/userSlice";
-import { initSocket, disconnectSocket } from "@/utils/socket";
+import { initSocket, disconnectSocket } from "@/socket/socket";
 
 function ProtectedRoute() {
   const currentUser = useSelector(selectCurrentUser);
@@ -89,6 +89,22 @@ const routers = createBrowserRouter([
 ]);
 
 function App() {
+  const currentUser = useSelector(selectCurrentUser);
+
+  // Initialize socket connection when user is logged in (handles page refresh)
+  useEffect(() => {
+    if (currentUser) {
+      initSocket();
+    } else {
+      disconnectSocket();
+    }
+
+    // Cleanup on unmount
+    return () => {
+      disconnectSocket();
+    };
+  }, [currentUser]);
+
   return (
     <>
       <RouterProvider router={routers} />
