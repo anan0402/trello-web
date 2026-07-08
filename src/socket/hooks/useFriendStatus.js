@@ -69,9 +69,12 @@ export const useFriendStatus = () => {
 
     const unsubscribe = subscribeToFriendStatus({
       onFriendOnline: (data) => {
-        const userId = Array.isArray(data) ? data[0]?.userId : data?.userId
+        // Handle both single object and array of objects
+        const userIds = Array.isArray(data)
+          ? data.map(item => item.userId).filter(Boolean)
+          : data?.userId ? [data.userId] : []
 
-        if (!userId) {
+        if (userIds.length === 0) {
           console.warn('No userId in friend_online event:', data)
           return
         }
@@ -79,7 +82,8 @@ export const useFriendStatus = () => {
         queryClient.setQueryData(['friends'], (prevFriends = []) =>
           prevFriends.map((friend) => {
             const friendData = friend.friendId || friend
-            if (friendData._id === userId) {
+            // Check if this friend is in the list of online users
+            if (userIds.includes(friendData._id)) {
               if (friend.friendId) {
                 return {
                   ...friend,
@@ -93,10 +97,12 @@ export const useFriendStatus = () => {
         )
       },
       onFriendOffline: (data) => {
-        // Server sends array: [{ userId: "..." }]
-        const userId = Array.isArray(data) ? data[0]?.userId : data?.userId
+        // Handle both single object and array of objects
+        const userIds = Array.isArray(data)
+          ? data.map(item => item.userId).filter(Boolean)
+          : data?.userId ? [data.userId] : []
 
-        if (!userId) {
+        if (userIds.length === 0) {
           console.warn('No userId in friend_offline event:', data)
           return
         }
@@ -104,7 +110,8 @@ export const useFriendStatus = () => {
         queryClient.setQueryData(['friends'], (prevFriends = []) =>
           prevFriends.map((friend) => {
             const friendData = friend.friendId || friend
-            if (friendData._id === userId) {
+            // Check if this friend is in the list of offline users
+            if (userIds.includes(friendData._id)) {
               if (friend.friendId) {
                 return {
                   ...friend,
