@@ -1,0 +1,73 @@
+.message-area-wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.message-area-loading,
+.message-area-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.message-area-loading-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+/* Scroll to bottom button */
+.scroll-to-bottom-button {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background-color: #fff !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  width: 40px;
+  height: 40px;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.scroll-to-bottom-button:hover {
+  background-color: #f5f5f5 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.scroll-to-bottom-button svg {
+  font-size: 18px;
+  color: #1976d2;
+}
+
+/* Message bubbles - reusing existing styles from ChatPage */
+.message-bubble {
+  padding: 8px 12px;
+  margin: 4px 8px;
+  border-radius: 12px;
+  max-width: 70%;
+  word-wrap: break-word;
+}
+
+.message-sent {
+  margin-left: auto;
+  background-color: #1976d2;
+  color: white;
+  align-self: flex-end;
+}
+
+.message-received {
+  margin-right: auto;
+  background-color: #f0f0f0;
+  color: #333;
+  align-self: flex-start;
+}
+
+.message-text {
+  margin: 0;
+  line-height: 1.4;
+}

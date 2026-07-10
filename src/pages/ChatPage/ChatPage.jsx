@@ -1,69 +1,74 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router'
+import { useSelector } from 'react-redux'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
-import InputBase from '@mui/material/InputBase'
 import CircularProgress from '@mui/material/CircularProgress'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft, faFaceSmile, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import Text from '@/components/atoms/Text/Text'
 import CustomAvatar from '@/components/atoms/CustomAvatar/CustomAvatar'
 import { getAvatarSrc } from '@/utils/funtion'
+import { useConversation } from '@/hooks/useConversation'
+import { useInfiniteMessages } from '@/hooks/useInfiniteMessages'
+import { useMessages } from '@/socket/hooks/useMessages'
+import { selectActiveChatUser } from '@/redux/chatSlice/chatSlice'
+import MessageArea from './components/MessageArea/MessageArea'
+import InputArea from './components/InputArea/InputArea'
 import './ChatPage.css'
-
-// Mock data for demonstration - replace with real API calls
-const mockUser = {
-  _id: '1',
-  username: 'DAISY',
-  avatar: null,
-  online: true
-}
-
-const mockMessages = [
-  {
-    _id: '1',
-    text: 'Helloww',
-    senderId: 'currentUser',
-    createdAt: new Date()
-  }
-]
 
 function ChatPage() {
   const { userId } = useParams()
   const navigate = useNavigate()
-  const [messages, setMessages] = useState(mockMessages)
   const [inputValue, setInputValue] = useState('')
-  const [isLoading] = useState(false)
-  const messagesEndRef = useRef(null)
   const inputRef = useRef(null)
 
-  // Mock user data - replace with actual API call
-  const chatUser = mockUser
+  // Get chat user from Redux (set from sidebar when clicking)
+  const chatUser = useSelector(selectActiveChatUser)
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
+  console.log('chatUser:', chatUser)
+  // Get or create conversation
+  const { data: conversation, isLoading: isLoadingConversation } = useConversation(userId)
+  const conversationId = conversation?._id
 
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages])
+  // Fetch paginated message history
+  const {
+    data: messagePages,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isLoadingMessages
+  } = useInfiniteMessages(conversationId)
+
+  // Real-time message updates via socket
+  const {
+    messages: realtimeMessages,
+    sendMessage: sendSocketMessage,
+    startTyping,
+    stopTyping
+  } = useMessages(conversationId)
+
+  // Flatten all paginated messages
+  const paginatedMessages = useMemo(() => {
+    return messagePages?.pages?.flatMap(page => page.messages || []) || []
+  }, [messagePages])
 
   const handleBack = () => {
     navigate(-1)
   }
 
   const handleSendMessage = () => {
-    if (!inputValue.trim()) return
+    if (!inputValue.trim() || !conversationId) return
 
-    const newMessage = {
-      _id: Date.now().toString(),
-      text: inputValue,
-      senderId: 'currentUser',
-      createdAt: new Date()
-    }
+    // Send message via socket
+    sendSocketMessage({
+      content: inputValue
+    })
 
-    setMessages([...messages, newMessage])
     setInputValue('')
+
+    // Stop typing indicator
+    stopTyping()
 
     // Focus back on input after sending
     inputRef.current?.focus()
@@ -76,7 +81,15 @@ function ChatPage() {
     }
   }
 
-  if (isLoading) {
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value)
+    // Trigger typing indicator
+    if (e.target.value.trim() && conversationId) {
+      startTyping()
+    }
+  }
+
+  if (isLoadingConversation) {
     return (
       <Box className="chat-loading">
         <CircularProgress />
@@ -94,62 +107,38 @@ function ChatPage() {
 
         <Box className="chat-header-info">
           <Text variant="h6" className="chat-username">
-            {chatUser.username}
-          </Text>
-          <Text variant="caption" className="chat-status">
-            {chatUser.online ? 'Online' : 'Offline'}
+            {chatUser?.username}
           </Text>
         </Box>
 
         <CustomAvatar
-          src={getAvatarSrc(chatUser.avatar)}
+          src={getAvatarSrc(chatUser?.avatar)}
           size="medium"
-          fallback={chatUser.username?.[0]}
+          fallback={chatUser?.username?.[0]}
+          isOnline={chatUser?.online}
         />
       </Box>
 
       {/* Messages Area */}
       <Box className="chat-messages-area">
-        <Box className="chat-messages-list">
-          {messages.map((message) => (
-            <Box
-              key={message._id}
-              className={`message-bubble ${
-                message.senderId === 'currentUser' ? 'message-sent' : 'message-received'
-              }`}
-            >
-              <Text className="message-text">{message.text}</Text>
-            </Box>
-          ))}
-          <div ref={messagesEndRef} />
-        </Box>
+        <MessageArea
+          paginatedMessages={paginatedMessages}
+          realtimeMessages={realtimeMessages}
+          onLoadMore={fetchNextPage}
+          hasMore={hasNextPage}
+          isLoadingMore={isFetchingNextPage}
+          isLoading={isLoadingMessages}
+        />
       </Box>
 
       {/* Input Area */}
-      <Box className="chat-input-container">
-        <IconButton className="chat-emoji-button">
-          <FontAwesomeIcon icon={faFaceSmile} />
-        </IconButton>
-
-        <InputBase
-          ref={inputRef}
-          placeholder="Message"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyPress={handleKeyPress}
-          className="chat-input"
-          multiline
-          maxRows={4}
-        />
-
-        <IconButton
-          onClick={handleSendMessage}
-          disabled={!inputValue.trim()}
-          className="chat-send-button"
-        >
-          <FontAwesomeIcon icon={faPaperPlane} />
-        </IconButton>
-      </Box>
+      <InputArea
+        inputRef={inputRef}
+        inputValue={inputValue}
+        onInputChange={handleInputChange}
+        onKeyPress={handleKeyPress}
+        onSendMessage={handleSendMessage}
+      />
     </Box>
   )
 }

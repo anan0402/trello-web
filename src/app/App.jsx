@@ -15,6 +15,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { selectCurrentUser } from "../redux/userSlice/userSlice";
 import { initSocket, disconnectSocket } from "@/socket/socket";
 import { setSocketConnected, setSocketDisconnected } from "@/redux/socketSlice/socketSlice";
+import { useGlobalSocketSubscriptions } from "@/socket/hooks/useGlobalSocketSubscriptions";
 
 function ProtectedRoute() {
   const currentUser = useSelector(selectCurrentUser);
@@ -109,6 +110,9 @@ function App() {
       disconnectSocket();
     };
   }, [currentUser]);
+
+  // Global socket subscriptions (always active after login)
+  useGlobalSocketSubscriptions();
 
   return (
     <>

@@ -1,6 +1,19 @@
 import authorizeAxiosInstance from '@/utils/authorizeAxiosInstance'
 
 /**
+ * Get or create a conversation with a user
+ * @param {string} userId - User ID to start conversation with
+ * @returns {Promise} Conversation object with _id, participants, etc.
+ */
+export const getOrCreateConversation = async (userId) => {
+  const response = await authorizeAxiosInstance.post(
+    `/v1/conversations/private`,
+    { targetUserId: userId }
+  )
+  return response.data
+}
+
+/**
  * Get message history for a conversation with pagination
  * @param {string} conversationId - Conversation ID
  * @param {Object} params - Query parameters { search, page, limit }

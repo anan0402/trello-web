@@ -51,21 +51,6 @@
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-.friend-avatar-container {
-  position: relative;
-}
-
-.online-indicator {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 10px;
-  height: 10px;
-  background-color: #4caf50;
-  border: 2px solid #ffffff;
-  border-radius: 50%;
-}
-
 .friend-info {
   flex: 1;
   display: flex;

@@ -42,3 +42,18 @@
   height: 120px !important;
   font-size: 48px !important;
 }
+
+.custom-avatar-container {
+  position: relative;
+}
+
+.online-indicator {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background-color: #4caf50;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+}
