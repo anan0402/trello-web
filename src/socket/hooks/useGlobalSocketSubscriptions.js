@@ -52,7 +52,6 @@ export const useGlobalSocketSubscriptions = () => {
 
         // Update active chat user status in Redux if they went online
         if (activeChatUser && userIds.includes(activeChatUser._id)) {
-          console.log('Online chat user:', activeChatUser)
           dispatch(setActiveChatUser({
             ...activeChatUser,
             online: true
@@ -90,7 +89,6 @@ export const useGlobalSocketSubscriptions = () => {
 
         // Update active chat user status in Redux if they went offline
         if (activeChatUser && userIds.includes(activeChatUser._id)) {
-          console.log('Offline chat user:', activeChatUser)
           dispatch(setActiveChatUser({
             ...activeChatUser,
             online: false
@@ -100,7 +98,7 @@ export const useGlobalSocketSubscriptions = () => {
     })
 
     return unsubscribe
-  }, [isSocketConnected, queryClient])
+  }, [isSocketConnected, activeChatUser])
 
   
 }

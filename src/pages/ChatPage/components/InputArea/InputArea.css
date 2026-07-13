@@ -11,8 +11,12 @@
 }
 
 .chat-emoji-button {
-  color: #666;
+  color: rgb(214, 214, 214);
+  font-size: 24px;
   padding: 8px;
+}
+.chat-emoji-button:hover {
+  color: #959595;
 }
 
 .chat-input {
@@ -29,14 +33,23 @@
 }
 
 .chat-send-button {
-  background-color: #1976d2;
-  color: white;
+  font-size: 24px;
+  color: rgb(214, 214, 214);
   padding: 10px;
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .chat-send-button:hover {
-  background-color: #1565c0;
+   color: #959595;
+}
+
+.chat-send-button--active {
+  color: var(--app-button-color);
+}
+
+.chat-send-button--active:hover {
+  color: var(--app-button-color-hover);
 }
 
 .chat-send-button:disabled {

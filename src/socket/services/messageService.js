@@ -5,23 +5,23 @@ import { MESSAGE_EVENTS } from '@/utils/constants'
 
 /**
  * Join a chat room
- * @param {string} roomId - Room/Chat ID
+ * @param {string} conversationId - Room/Chat ID
  */
-export const joinRoom = (roomId) => {
-  emitEvent(MESSAGE_EVENTS.JOIN_ROOM, { roomId })
+export const joinConversation = (conversationId) => {
+  emitEvent(MESSAGE_EVENTS.JOIN_CONVERSATION, { conversationId })
 }
 
 /**
  * Leave a chat room
- * @param {string} roomId - Room/Chat ID
+ * @param {string} conversationId - Room/Chat ID
  */
-export const leaveRoom = (roomId) => {
-  emitEvent(MESSAGE_EVENTS.LEAVE_ROOM, { roomId })
+export const leaveConversation = (conversationId) => {
+  emitEvent(MESSAGE_EVENTS.LEAVE_CONVERSATION, { conversationId })
 }
 
 /**
  * Send a message
- * @param {object} messageData - Message data { roomId, content, ... }
+ * @param {object} messageData - Message data { conversationId, content, ... }
  */
 export const sendMessage = (messageData) => {
   emitEvent(MESSAGE_EVENTS.SEND_MESSAGE, messageData)
@@ -30,26 +30,26 @@ export const sendMessage = (messageData) => {
 /**
  * Delete a message
  * @param {string} messageId - Message ID
- * @param {string} roomId - Room ID
+ * @param {string} conversationId - Room ID
  */
-export const deleteMessage = (messageId, roomId) => {
-  emitEvent(MESSAGE_EVENTS.DELETE_MESSAGE, { messageId, roomId })
+export const deleteMessage = (messageId, conversationId) => {
+  emitEvent(MESSAGE_EVENTS.DELETE_MESSAGE, { messageId, conversationId })
 }
 
 /**
  * Start typing indicator
- * @param {string} roomId - Room ID
+ * @param {string} conversationId - Room ID
  */
-export const startTyping = (roomId) => {
-  emitEvent(MESSAGE_EVENTS.TYPING_START, { roomId })
+export const startTyping = (conversationId) => {
+  emitEvent(MESSAGE_EVENTS.TYPING_START, { conversationId })
 }
 
 /**
  * Stop typing indicator
- * @param {string} roomId - Room ID
+ * @param {string} conversationId - Room ID
  */
-export const stopTyping = (roomId) => {
-  emitEvent(MESSAGE_EVENTS.TYPING_STOP, { roomId })
+export const stopTyping = (conversationId) => {
+  emitEvent(MESSAGE_EVENTS.TYPING_STOP, { conversationId })
 }
 
 /**

@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import {
   subscribeToMessages,
-  joinRoom,
-  leaveRoom,
+  joinConversation,
+  leaveConversation,
   sendMessage,
   deleteMessage,
   startTyping,
@@ -11,28 +11,28 @@ import {
 
 /**
  * Custom hook for managing real-time messages in a chat room
- * @param {string} roomId - Chat room ID
+ * @param {string} conversationId - Chat room ID
  * @returns {object} Message state and actions
  */
-export const useMessages = (roomId) => {
+export const useMessages = (conversationId) => {
   const [messages, setMessages] = useState([])
   const [typingUsers, setTypingUsers] = useState([])
   const typingTimeoutRef = useRef(null)
 
   // Join room on mount, leave on unmount
-  useEffect(() => {
-    if (!roomId) return
+  useEffect(() => { 
+    if (!conversationId) return
 
-    joinRoom(roomId)
+    joinConversation(conversationId)    
 
     return () => {
-      leaveRoom(roomId)
+      leaveConversation(conversationId)
     }
-  }, [roomId])
+  }, [conversationId])
 
   // Subscribe to message events
   useEffect(() => {
-    if (!roomId) return
+    if (!conversationId) return
 
     const unsubscribe = subscribeToMessages({
       // Handle new message
@@ -67,34 +67,34 @@ export const useMessages = (roomId) => {
     })
 
     return unsubscribe
-  }, [roomId])
+  }, [conversationId])
 
   // Action handlers
   const handleSendMessage = useCallback(
     (messageData) => {
-      if (!roomId) return
+      if (!conversationId) return
 
       sendMessage({
-        roomId,
+        conversationId,
         ...messageData
       })
     },
-    [roomId]
+    [conversationId]
   )
 
   const handleDeleteMessage = useCallback(
     (messageId) => {
-      if (!roomId) return
+      if (!conversationId) return
 
-      deleteMessage(messageId, roomId)
+      deleteMessage(messageId, conversationId)
     },
-    [roomId]
+    [conversationId]
   )
 
   const handleStartTyping = useCallback(() => {
-    if (!roomId) return
+    if (!conversationId) return
 
-    startTyping(roomId)
+    startTyping(conversationId)
 
     // Clear existing timeout
     if (typingTimeoutRef.current) {
@@ -105,25 +105,25 @@ export const useMessages = (roomId) => {
     typingTimeoutRef.current = setTimeout(() => {
       handleStopTyping()
     }, 3000)
-  }, [roomId])
+  }, [conversationId])
 
   const handleStopTyping = useCallback(() => {
-    if (!roomId) return
+    if (!conversationId) return
 
-    stopTyping(roomId)
+    stopTyping(conversationId)
 
     // Clear timeout
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current)
       typingTimeoutRef.current = null
     }
-  }, [roomId])
+  }, [conversationId])
 
   // Clear messages when room changes
   useEffect(() => {
     setMessages([])
     setTypingUsers([])
-  }, [roomId])
+  }, [conversationId])
 
   // Cleanup typing timeout on unmount
   useEffect(() => {

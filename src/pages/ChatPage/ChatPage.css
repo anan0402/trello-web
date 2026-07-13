@@ -64,27 +64,6 @@
   }
 }
 
-.message-sent {
-  align-self: flex-start;
-  background-color: #e3f2fd;
-  color: #000;
-  border-bottom-left-radius: 4px;
-}
-
-.message-received {
-  align-self: flex-end;
-  background-color: #f0f0f0;
-  color: #000;
-  border-bottom-right-radius: 4px;
-}
-
-.message-text {
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-
 
 /* Loading State */
 .chat-loading {

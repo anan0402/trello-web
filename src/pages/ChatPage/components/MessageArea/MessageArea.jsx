@@ -37,7 +37,6 @@ function MessageArea({
     // Remove duplicates between paginated and real-time messages
     const realtimeIds = new Set(realtimeMessages.map(m => m._id))
     const uniquePaginatedMessages = paginatedMessages.filter(m => !realtimeIds.has(m._id))
-
     // Sort by createdAt (oldest first)
     return [...uniquePaginatedMessages, ...realtimeMessages].sort(
       (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
@@ -85,12 +84,13 @@ function MessageArea({
 
     const isOwnMessage = message.senderId === currentUser?._id
 
+    
     return (
       <Box
         key={message._id}
         className={`message-bubble ${isOwnMessage ? 'message-sent' : 'message-received'}`}
       >
-        <Text className="message-text">{message.text || message.content}</Text>
+        <Text className="message-text">{message.message || message.message}</Text>
       </Box>
     )
   }

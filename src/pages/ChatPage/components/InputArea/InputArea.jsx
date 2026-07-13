@@ -8,9 +8,9 @@ import './InputArea.css'
 function InputArea({ inputRef, inputValue, onInputChange, onKeyPress, onSendMessage }) {
   return (
     <Box className="chat-input-container">
-      <IconButton className="chat-emoji-button">
+      <div className="chat-emoji-button">
         <FontAwesomeIcon icon={faFaceSmile} />
-      </IconButton>
+      </div>
 
       <InputBase
         ref={inputRef}
@@ -23,13 +23,13 @@ function InputArea({ inputRef, inputValue, onInputChange, onKeyPress, onSendMess
         maxRows={4}
       />
 
-      <IconButton
+      <div
         onClick={onSendMessage}
         disabled={!inputValue.trim()}
-        className="chat-send-button"
+        className={`chat-send-button ${inputValue.trim() ? 'chat-send-button--active' : ''}`}
       >
-        <FontAwesomeIcon icon={faPaperPlane} />
-      </IconButton>
+        <FontAwesomeIcon icon={faPaperPlane}/>
+      </div>
     </Box>
   )
 }

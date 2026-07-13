@@ -31,8 +31,8 @@ export const FRIEND_STATUS_EVENTS = {
 export const MESSAGE_EVENTS = {
   // Incoming events (listened by server)
   SEND_MESSAGE: 'send_message',
-  JOIN_ROOM: 'join_room',
-  LEAVE_ROOM: 'leave_room',
+  JOIN_CONVERSATION: 'join_conversation',
+  LEAVE_CONVERSATION: 'leave_conversation',
   TYPING_START: 'typing_start',
   TYPING_STOP: 'typing_stop',
   DELETE_MESSAGE: 'delete_message',

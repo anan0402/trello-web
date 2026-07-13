@@ -26,10 +26,9 @@ function ChatPage() {
   // Get chat user from Redux (set from sidebar when clicking)
   const chatUser = useSelector(selectActiveChatUser)
 
-  console.log('chatUser:', chatUser)
   // Get or create conversation
   const { data: conversation, isLoading: isLoadingConversation } = useConversation(userId)
-  const conversationId = conversation?._id
+  const conversationId = conversation?.conversationId
 
   // Fetch paginated message history
   const {
@@ -62,7 +61,7 @@ function ChatPage() {
 
     // Send message via socket
     sendSocketMessage({
-      content: inputValue
+      message: inputValue
     })
 
     setInputValue('')
