@@ -31,6 +31,7 @@ function MessageArea({
   const currentUser = useSelector(selectCurrentUser)
   const [isAtBottom, setIsAtBottom] = useState(true)
   const [showScrollButton, setShowScrollButton] = useState(false)
+  const [firstItemIndex, setFirstItemIndex] = useState(0)
 
   // Combine paginated and real-time messages
   const allMessages = useMemo(() => {
@@ -42,25 +43,48 @@ function MessageArea({
       (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
     )
   }, [paginatedMessages, realtimeMessages])
+  const prevMessageCountRef = useRef(allMessages.length)
+
+  // Adjust firstItemIndex when messages are prepended (loading older messages)
+  useEffect(() => {
+    const currentLength = allMessages.length
+    const prevLength = prevMessageCountRef.current
+
+    if (currentLength > prevLength) {
+      const diff = currentLength - prevLength
+      // If messages were added and we're not at bottom, they were prepended
+      if (!isAtBottom) {
+        setFirstItemIndex(prev => prev - diff)
+      }
+    }
+
+    prevMessageCountRef.current = currentLength
+  }, [allMessages.length, isAtBottom])
 
   // Show scroll button when new messages arrive and user is not at bottom
-  const prevMessageCountRef = useRef(allMessages.length)
   useEffect(() => {
-    if (allMessages.length > prevMessageCountRef.current && !isAtBottom) {
+    if (!isAtBottom) {
       setShowScrollButton(true)
     }
-    prevMessageCountRef.current = allMessages.length
-  }, [allMessages.length, isAtBottom])
+  }, [isAtBottom])
+
+  // useEffect (() => {
+  //   if (allMessages.length > prevMessageCountRef.current && isAtBottom) {
+  //     handleScrollToBottom()
+  //   }
+  //   prevMessageCountRef.current = allMessages.length
+  // }, [allMessages, isAtBottom])
 
   // Handle loading more messages when scrolling to top
   const handleStartReached = () => {
     if (hasMore && !isLoadingMore) {
       onLoadMore?.()
-    }
+    } 
   }
 
   // Track if user is at the bottom of the list
   const handleAtBottomStateChange = (atBottom) => {
+    console.log('At the bottom')
     setIsAtBottom(atBottom)
     if (atBottom) {
       setShowScrollButton(false)
@@ -69,22 +93,27 @@ function MessageArea({
 
   // Scroll to bottom when button is clicked
   const handleScrollToBottom = () => {
-    virtuosoRef.current?.scrollToIndex({
-      index: 'LAST',
-      behavior: 'smooth',
-      align: 'end'
-    })
+    console.log('Scrolling to bottom')
+    if (allMessages.length > 0) {
+      virtuosoRef.current?.scrollToIndex({
+        index: firstItemIndex + allMessages.length - 1,
+        behavior: 'smooth',
+        align: 'start'
+      })
+    }
     setShowScrollButton(false)
   }
 
   // Render individual message
   const renderMessage = (index) => {
-    const message = allMessages[index]
+    // Adjust index to account for firstItemIndex offset
+    const actualIndex = index - firstItemIndex
+    const message = allMessages[actualIndex]
     if (!message) return null
 
     const isOwnMessage = message.senderId === currentUser?._id
 
-    
+
     return (
       <Box
         key={message._id}
@@ -113,24 +142,32 @@ function MessageArea({
     )
   }
 
+
   return (
     <Box className="message-area-wrapper">
       <Virtuoso
         ref={virtuosoRef}
         style={{ height: '100%' }}
         data={allMessages}
+        firstItemIndex={firstItemIndex}
         initialTopMostItemIndex={allMessages.length - 1}
-        startReached={handleStartReached}
         atBottomStateChange={handleAtBottomStateChange}
         atBottomThreshold={50}
-        overscan={200}
+        overscan={{ main: 200, reverse: 200 }}
+        rangeChanged={(range) => {
+          // Trigger load when scrolled near the top (within 3 items from first item)
+          if (range.startIndex - firstItemIndex <= 3 && hasMore && !isLoadingMore) {
+            handleStartReached()
+          }
+        }}
         itemContent={(index) => renderMessage(index)}
         components={{
           Header: () => isLoadingMore ? (
             <Box className="message-area-loading-more">
               <CircularProgress size={24} />
             </Box>
-          ) : null
+          ) : null,
+          Footer: () => <div style={{ height: '10px' }} />
         }}
       />
 

@@ -22,7 +22,6 @@ function CustomAvatar({
   isOnline = false,
   ...props
 }) {
-  console.log('isOnline:', isOnline)
   const sizeClass = `custom-avatar-${size}`
   const clickableClass = onClick ? 'custom-avatar-clickable' : ''
   return (

@@ -23,14 +23,15 @@
 /* Scroll to bottom button */
 .scroll-to-bottom-button {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
+  bottom: 50px;
+  left: 50%;
   background-color: #fff !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   width: 40px;
   height: 40px;
   z-index: 10;
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .scroll-to-bottom-button:hover {
@@ -41,7 +42,7 @@
 
 .scroll-to-bottom-button svg {
   font-size: 18px;
-  color: #1976d2;
+  color: var(--app-button-color);
 }
 
 /* Message bubbles - reusing existing styles from ChatPage */

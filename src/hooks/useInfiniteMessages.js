@@ -22,10 +22,8 @@ export const useInfiniteMessages = (conversationId, limit = 50, search = '', opt
       return response
     },
     getNextPageParam: (lastPage) => {
-      // Return the next page number if there are more pages
-      // If no more pages, return undefined
-      const hasNextPage = lastPage.currentPage < lastPage.totalPages
-      return hasNextPage ? lastPage.currentPage + 1 : undefined
+      const hasNextPage = lastPage?.pagination?.hasNextPage
+      return hasNextPage ? lastPage?.pagination?.page + 1 : undefined
     },
     initialPageParam: 1,
     enabled: !!conversationId, // Only fetch when conversationId exists

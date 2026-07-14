@@ -46,12 +46,19 @@ function ChatPage() {
     startTyping,
     stopTyping
   } = useMessages(conversationId)
-
+   
   // Flatten all paginated messages
+  // Reverse pages so that page 2 (older messages) comes before page 1 (newer messages)
   const paginatedMessages = useMemo(() => {
-    return messagePages?.pages?.flatMap(page => page.messages || []) || []
+    if (!messagePages?.pages) return []
+
+    return messagePages.pages
+      .slice()
+      .reverse()
+      .flatMap(page => page?.messages || [])
   }, [messagePages])
 
+  
   const handleBack = () => {
     navigate(-1)
   }
