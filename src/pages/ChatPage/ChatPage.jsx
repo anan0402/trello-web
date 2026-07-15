@@ -1,6 +1,5 @@
 import { useState, useRef, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router'
-import { useSelector } from 'react-redux'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -12,7 +11,7 @@ import { getAvatarSrc } from '@/utils/funtion'
 import { useConversation } from '@/hooks/useConversation'
 import { useInfiniteMessages } from '@/hooks/useInfiniteMessages'
 import { useMessages } from '@/socket/hooks/useMessages'
-import { selectActiveChatUser } from '@/redux/chatSlice/chatSlice'
+import { useConversationInfo } from '@/hooks/useConversationInfo'
 import MessageArea from './components/MessageArea/MessageArea'
 import InputArea from './components/InputArea/InputArea'
 import './ChatPage.css'
@@ -23,12 +22,19 @@ function ChatPage() {
   const [inputValue, setInputValue] = useState('')
   const inputRef = useRef(null)
 
-  // Get chat user from Redux (set from sidebar when clicking)
-  const chatUser = useSelector(selectActiveChatUser)
-
   // Get or create conversation
   const { data: conversation, isLoading: isLoadingConversation } = useConversation(userId)
   const conversationId = conversation?.conversationId
+
+  // Get conversation info (includes other user details)
+  const { data: conversationInfo, isLoading: isLoadingConversationInfo } = useConversationInfo(conversationId)
+
+  // Extract user info from conversation info
+  const chatUser = conversationInfo ? {
+    username: conversationInfo.name,
+    avatar: conversationInfo.avatar,
+    online: conversationInfo.isOnline
+  } : null
 
   // Fetch paginated message history
   const {
@@ -95,7 +101,7 @@ function ChatPage() {
     }
   }
 
-  if (isLoadingConversation) {
+  if (isLoadingConversation || isLoadingConversationInfo) {
     return (
       <Box className="chat-loading">
         <CircularProgress />

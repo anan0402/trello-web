@@ -14,6 +14,18 @@ export const getOrCreateConversation = async (userId) => {
 }
 
 /**
+ * Get conversation info including participant details
+ * @param {string} conversationId - Conversation ID
+ * @returns {Promise} Conversation info with user details
+ */
+export const getConversationInfo = async (conversationId) => {
+  const response = await authorizeAxiosInstance.get(
+    `/v1/conversations/${conversationId}/info`
+  )
+  return response.data
+}
+
+/**
  * Get message history for a conversation with pagination
  * @param {string} conversationId - Conversation ID
  * @param {Object} params - Query parameters { search, page, limit }
