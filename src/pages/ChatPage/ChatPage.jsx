@@ -1,5 +1,6 @@
 import { useState, useRef, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router'
+import { useSelector } from 'react-redux'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -8,6 +9,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import Text from '@/components/atoms/Text/Text'
 import CustomAvatar from '@/components/atoms/CustomAvatar/CustomAvatar'
 import { getAvatarSrc } from '@/utils/funtion'
+import { selectCurrentUser } from '@/redux/userSlice/userSlice'
 import { useConversation } from '@/hooks/useConversation'
 import { useInfiniteMessages } from '@/hooks/useInfiniteMessages'
 import { useMessages } from '@/socket/hooks/useMessages'
@@ -19,6 +21,7 @@ import './ChatPage.css'
 function ChatPage() {
   const { userId } = useParams()
   const navigate = useNavigate()
+  const currentUser = useSelector(selectCurrentUser)
   const [inputValue, setInputValue] = useState('')
   const inputRef = useRef(null)
 
@@ -50,8 +53,9 @@ function ChatPage() {
     messages: realtimeMessages,
     sendMessage: sendSocketMessage,
     startTyping,
-    stopTyping
-  } = useMessages(conversationId)
+    stopTyping,
+    typingUsers
+  } = useMessages(conversationId, currentUser?._id)
    
   // Flatten all paginated messages
   // Reverse pages so that page 2 (older messages) comes before page 1 (newer messages)
@@ -140,6 +144,7 @@ function ChatPage() {
           hasMore={hasNextPage}
           isLoadingMore={isFetchingNextPage}
           isLoading={isLoadingMessages}
+          typingUsers={typingUsers}
         />
       </Box>
 

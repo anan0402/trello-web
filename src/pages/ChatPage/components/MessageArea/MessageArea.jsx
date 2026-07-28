@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo, useState } from 'react'
+import { useRef, useEffect, useMemo, useState, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
@@ -7,6 +7,7 @@ import { Virtuoso } from 'react-virtuoso'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import Text from '@/components/atoms/Text/Text'
+import CustomThreeDotsLoading from '@/components/atoms/CustomThreeDotsLoading/CustomThreeDotsLoading'
 import { selectCurrentUser } from '@/redux/userSlice/userSlice'
 import './MessageArea.css'
 
@@ -18,6 +19,7 @@ import './MessageArea.css'
  * @param {boolean} hasMore - Whether there are more messages to load
  * @param {boolean} isLoadingMore - Loading state for pagination
  * @param {boolean} isLoading - Initial loading state
+ * @param {Array} typingUsers - Users currently typing
  */
 function MessageArea({
   paginatedMessages = [],
@@ -25,7 +27,8 @@ function MessageArea({
   onLoadMore,
   hasMore = false,
   isLoadingMore = false,
-  isLoading = false
+  isLoading = false,
+  typingUsers = []
 }) {
   const virtuosoRef = useRef(null)
   const currentUser = useSelector(selectCurrentUser)
@@ -68,12 +71,19 @@ function MessageArea({
     }
   }, [isAtBottom])
 
-  // useEffect (() => {
-  //   if (allMessages.length > prevMessageCountRef.current && isAtBottom) {
-  //     handleScrollToBottom()
-  //   }
-  //   prevMessageCountRef.current = allMessages.length
-  // }, [allMessages, isAtBottom])
+  // followOutput - auto scroll when current user sends message or already at bottom
+  const followOutput = useCallback((isAtBottom) => {
+    if (allMessages.length === 0) return false
+
+    const lastMessage = allMessages[allMessages.length - 1]
+    const isOwnMessage = lastMessage?.senderId === currentUser?._id
+
+    // Auto scroll if at bottom OR if it's user's own message
+    if (isAtBottom || isOwnMessage) {
+      return 'smooth'
+    }
+    return false
+  }, [allMessages, currentUser?._id])
 
   // Handle loading more messages when scrolling to top
   const handleStartReached = () => {
@@ -151,6 +161,7 @@ function MessageArea({
         data={allMessages}
         firstItemIndex={firstItemIndex}
         initialTopMostItemIndex={allMessages.length - 1}
+        followOutput={followOutput}
         atBottomStateChange={handleAtBottomStateChange}
         atBottomThreshold={50}
         overscan={{ main: 200, reverse: 200 }}
@@ -167,7 +178,24 @@ function MessageArea({
               <CircularProgress size={24} />
             </Box>
           ) : null,
-          Footer: () => <div style={{ height: '10px' }} />
+          Footer: () => (
+            <>
+              {typingUsers.length > 0 && (
+                <Box className="typing-indicator">
+                  <Box className="typing-indicator-content">
+                    <CustomThreeDotsLoading size={6} color="#666" />
+                    <Text className="typing-indicator-text">
+                      {typingUsers.length === 1
+                        ? `${typingUsers[0].username} is typing`
+                        : `${typingUsers.length} people are typing`
+                      }
+                    </Text>
+                  </Box>
+                </Box>
+              )}
+              <div style={{ height: '10px' }} />
+            </>
+          )
         }}
       />
 

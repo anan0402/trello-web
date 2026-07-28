@@ -12,9 +12,10 @@ import {
 /**
  * Custom hook for managing real-time messages in a chat room
  * @param {string} conversationId - Chat room ID
+ * @param {string} currentUserId - Current user ID for optimistic updates
  * @returns {object} Message state and actions
  */
-export const useMessages = (conversationId) => {
+export const useMessages = (conversationId, currentUserId) => {
   const [messages, setMessages] = useState([])
   const [typingUsers, setTypingUsers] = useState([])
   const typingTimeoutRef = useRef(null)
@@ -35,8 +36,9 @@ export const useMessages = (conversationId) => {
     if (!conversationId) return
 
     const unsubscribe = subscribeToMessages({
-      // Handle new message
+      // Handle new message (skip own messages - already added optimistically)
       onNewMessage: (message) => {
+        if (message.senderId === currentUserId) return
         setMessages((prev) => [...prev, message])
       },
 
@@ -72,14 +74,25 @@ export const useMessages = (conversationId) => {
   // Action handlers
   const handleSendMessage = useCallback(
     (messageData) => {
-      if (!conversationId) return
+      if (!conversationId || !currentUserId) return
 
+      // Optimistic update - add message immediately
+      const optimisticMessage = {
+        _id: `temp_${Date.now()}`,
+        conversationId,
+        senderId: currentUserId,
+        message: messageData.message,
+        createdAt: new Date().toISOString()
+      }
+      setMessages((prev) => [...prev, optimisticMessage])
+
+      // Send via socket
       sendMessage({
         conversationId,
         ...messageData
       })
     },
-    [conversationId]
+    [conversationId, currentUserId]
   )
 
   const handleDeleteMessage = useCallback(
