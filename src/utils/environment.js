@@ -1,6 +1,8 @@
 const isDev = import.meta.env.DEV
 const isProd = import.meta.env.PROD
 
+console.log('import.meta.env', import.meta.env)
+
 export const environment = {
   buildMode: isDev ? 'dev' : 'prod',
   apiBaseUrl: isDev
