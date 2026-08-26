@@ -1,4 +1,5 @@
 import { useFriends } from '@/hooks'
+import { sendFriendRequestSocket } from '../services/friendService'
 
 /**
  * Custom hook for accessing friend data
@@ -9,9 +10,12 @@ import { useFriends } from '@/hooks'
  */
 export const useFriendStatus = () => {
   const { data: friends = [], isLoading: loading } = useFriends()
-
+  const handleSendFriendRequest  = (targetUserId) =>{
+    sendFriendRequestSocket(targetUserId)
+  }
   return {
     friends,
-    loading
+    loading,
+    handleSendFriendRequest
   }
 }

@@ -7,16 +7,16 @@ import { FRIEND_REQUEST_EVENTS, FRIEND_STATUS_EVENTS } from '@/utils/constants'
  * Send a friend request
  * @param {string} receiverId - Receiver user ID
  */
-export const sendFriendRequestSocket = (receiverId) => {
-  emitEvent(FRIEND_REQUEST_EVENTS.SEND_FRIEND_REQUEST, { receiverId })
+export const sendFriendRequestSocket = (targetUserId) => {
+  emitEvent(FRIEND_REQUEST_EVENTS.SEND_FRIEND_REQUEST, { targetUserId })
 }
 
 /**
  * Accept a friend request
- * @param {string} requestId - Friend request ID
+ * @param {string} targetUserId - Friend request ID
  */
-export const acceptFriendRequestSocket = (requestId) => {
-  emitEvent(FRIEND_REQUEST_EVENTS.ACCEPT_FRIEND_REQUEST, { requestId })
+export const acceptFriendRequestSocket = (targetUserId) => {
+  emitEvent(FRIEND_REQUEST_EVENTS.ACCEPT_FRIEND_REQUEST, { targetUserId })
 }
 
 /**

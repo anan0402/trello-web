@@ -14,6 +14,7 @@ import CustomAvatar from '@/components/atoms/CustomAvatar/CustomAvatar'
 import CustomButton from '@/components/atoms/CustomButton/CustomButton'
 import { getAvatarSrc } from '@/utils/funtion'
 import './AccountProfilePage.css'
+import { useFriendStatus } from '../../socket/hooks/useFriendStatus'
 
 export const FRIEND_REQUEST_STATUS = {
   NONE: 'none',
@@ -25,6 +26,8 @@ export const FRIEND_REQUEST_STATUS = {
 function AccountProfilePage() {
   const { id } = useParams()
   const currentUser = useSelector(selectCurrentUser)
+  const {handleSendFriendRequest } = useFriendStatus()
+
   const { data: user, isLoading, error } = useUserDetails(id)
   const { sendRequest, acceptRequest, rejectRequest, cancelRequest, unfriend } = useFriendRequest(id)
   const [formData, setFormData] = useState({
@@ -47,7 +50,9 @@ function AccountProfilePage() {
   }, [user])
 
 
-  
+  const handleAddFriend = (targetUserId) =>{
+    handleSendFriendRequest(targetUserId)
+  }
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData(prev => ({
@@ -67,7 +72,7 @@ function AccountProfilePage() {
         return (
           <CustomButton
             variable="primary"
-            onClick={() => sendRequest.mutate()}
+            onClick={() => handleAddFriend(id)}
             disabled={sendRequest.isPending}
           >
             {sendRequest.isPending ? 'Sending...' : 'Add Friend'}
